@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte Canadienne du Handicap – Vérification des Accommodements</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #00205b; /* 🔵 same blue as other pages */
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h2 {
+      color: #00205b;
+      border-bottom: 2px solid #00205b;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #00205b;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #00205b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #003580;
+    }
+
+    .results {
+      margin-top: 30px;
+    }
+
+    .services-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .services-list li {
+      background: #e6f2ff;
+      border-left: 4px solid #00205b;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .error {
+      color: #c8102e;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: #006600;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 25px;
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <header>Vérification des Accommodements</header>
+
+  <div class="container">
+    <h2>Entrer le numéro de compte</h2>
+    <label for="numeroCompte">Numéro de compte :</label>
+    <input type="text" id="numeroCompte" placeholder="Ex: ACC234578">
+    <button onclick="verifierCompte()">Vérifier</button>
+
+    <div id="message" class="success" style="display:none;"></div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div class="results" id="results" style="display:none;">
+      <h2>Services et Droits</h2>
+      <ul class="services-list" id="servicesList"></ul>
+    </div>
+
+    <a href="index.html" class="back">Retour à l’accueil</a>
+  </div>
+
+  <script>
+    // Simulation d’une base de données
+    const utilisateurs = [
+      {
+        numero_de_compte: "ACC234578",
+        prenom: "Younes",
+        nom: "Chaouni",
+        province: "Ontario",
+        services: [
+          "Stationnement gratuit",
+          "Accès prioritaire dans les files d’attente",
+          "Réductions sur le transport public"
+        ]
+      },
+      {
+        numero_de_compte: "ACC554411",
+        prenom: "Sarra",
+        nom: "Benali",
+        province: "Québec",
+        services: [
+          "Stationnement réservé",
+          "Accès prioritaire",
+          "Service d’assistance en établissement"
+        ]
+      }
+    ];
+
+    function verifierCompte() {
+      const numero = document.getElementById("numeroCompte").value.trim();
+      const user = utilisateurs.find(u => u.numero_de_compte === numero);
+      const resultsDiv = document.getElementById("results");
+      const servicesList = document.getElementById("servicesList");
+      const msg = document.getElementById("message");
+      const err = document.getElementById("error");
+
+      msg.style.display = err.style.display = resultsDiv.style.display = "none";
+
+      if (!numero) {
+        err.textContent = "Veuillez entrer un numéro de compte.";
+        err.style.display = "block";
+        return;
+      }
+
+      if (!user) {
+        err.textContent = "Aucun utilisateur trouvé avec ce numéro de compte.";
+        err.style.display = "block";
+        return;
+      }
+
+      // Afficher message de succès
+      msg.textContent = `Utilisateur trouvé : ${user.prenom} ${user.nom} (${user.province})`;
+      msg.style.display = "block";
+
+      // Afficher les services
+      resultsDiv.style.display = "block";
+      servicesList.innerHTML = "";
+      user.services.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        servicesList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
