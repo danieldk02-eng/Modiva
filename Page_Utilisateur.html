@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte Canadienne du Handicap – Espace Utilisateur</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #c8102e; /* rouge Canada */
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      color: #00205b;
+      border-bottom: 2px solid #00205b;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+    .info p {
+      margin: 6px 0;
+      line-height: 1.4;
+    }
+    .services ul {
+      list-style: none;
+      padding: 0;
+    }
+    .services li {
+      background: #e6f2ff;
+      padding: 10px;
+      border-left: 4px solid #00205b;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .qr-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .qr-section img {
+      width: 160px;
+      margin: 10px 0;
+    }
+    .logout {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .logout:hover { background-color: #5a6268; }
+  </style>
+</head>
+
+<body>
+  <header>Carte Canadienne du Handicap – Espace Utilisateur</header>
+  <div class="container">
+    <h2>Informations Personnelles</h2>
+    <div class="info">
+      <p><strong>Prénom :</strong> <span id="prenom">—</span></p>
+      <p><strong>Nom :</strong> <span id="nom">—</span></p>
+      <p><strong>Email :</strong> <span id="email">—</span></p>
+      <p><strong>Adresse :</strong> <span id="adresse">—</span></p>
+      <p><strong>Numéro de compte :</strong> <span id="numeroCompte">—</span></p>
+    </div>
+
+    <h2>Services et Accommodements</h2>
+    <div class="services">
+      <ul id="servicesList"><li>Chargement des services…</li></ul>
+    </div>
+
+    <div class="qr-section">
+      <h2>Votre QR Code</h2>
+      <img id="qrCode" src="" alt="QR Code utilisateur">
+      <p>Présentez ce code pour vérifier vos droits d’accommodement.</p>
+    </div>
+
+    <a href="index.html" class="logout">Se Déconnecter</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script>
+    // Exemple simulé — ces données viendront du backend (Node.js / MySQL)
+    const utilisateur = {
+      prenom: "Younes",
+      nom: "Chaouni",
+      email: "younes.chaouni@example.com",
+      adresse: "75 Laurier Ave, Ottawa, ON",
+      numero_de_compte: "ACC234578",
+      services: [
+        { nom: "Stationnement gratuit", province: "Ontario" },
+        { nom: "Accès prioritaire dans les files d’attente", province: "Ontario" },
+        { nom: "Réductions sur le transport public", province: "Ontario" }
+      ]
+    };
+
+    // Remplir les champs
+    document.getElementById("prenom").textContent = utilisateur.prenom;
+    document.getElementById("nom").textContent = utilisateur.nom;
+    document.getElementById("email").textContent = utilisateur.email;
+    document.getElementById("adresse").textContent = utilisateur.adresse;
+    document.getElementById("numeroCompte").textContent = utilisateur.numero_de_compte;
+
+    // Liste des services
+    const ul = document.getElementById("servicesList");
+    ul.innerHTML = "";
+    utilisateur.services.forEach(s => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${s.nom}</strong> (${s.province})`;
+      ul.appendChild(li);
+    });
+
+    // Génération du QR code
+    QRCode.toDataURL(utilisateur.numero_de_compte, { width: 160 }, function (err, url) {
+      document.getElementById("qrCode").src = url;
+    });
+  </script>
+</body>
+</html>
