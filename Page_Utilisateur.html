@@ -12,7 +12,7 @@
       padding: 0;
     }
     header {
-      background-color: #00205b; /* rouge Canada */
+      background-color: #00205b; 
       color: white;
       text-align: center;
       padding: 20px 0;
@@ -34,8 +34,13 @@
       margin-bottom: 15px;
     }
     .info p {
-      margin: 6px 0;
-      line-height: 1.4;
+      margin: 10px 0;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .info strong {
+      color: #00205b;
+      font-weight: 600;
     }
     .services ul {
       list-style: none;
@@ -43,98 +48,224 @@
     }
     .services li {
       background: #e6f2ff;
-      padding: 10px;
+      padding: 15px;
       border-left: 4px solid #00205b;
       border-radius: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
-    .qr-section {
+    .service-name {
+      font-weight: bold;
+      color: #00205b;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .service-description {
+      color: #333;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .service-province {
+      font-size: 13px;
+      color: #666;
+      font-style: italic;
+      margin-top: 5px;
+    }
+    .numero-section {
       text-align: center;
-      margin-top: 30px;
+      margin: 40px 0;
+      padding: 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+      color: white;
     }
-    .qr-section img {
-      width: 160px;
-      margin: 10px 0;
+    .numero-section h2 {
+      color: white;
+      border-bottom: 2px solid white;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .numero-compte-display {
+      font-size: 36px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin: 20px 0;
+      padding: 20px;
+      background-color: white;
+      color: #00205b;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .logout {
       display: block;
       text-align: center;
-      margin-top: 25px;
+      margin-top: 30px;
       background-color: #6c757d;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 30px;
       border-radius: 6px;
       text-decoration: none;
       width: fit-content;
       margin-left: auto;
       margin-right: auto;
+      font-size: 16px;
+      font-weight: 600;
     }
-    .logout:hover { background-color: #5a6268; }
+    .logout:hover { 
+      background-color: #5a6268; 
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 18px;
+    }
+    .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+      border-left: 4px solid #f5c6cb;
+    }
+    .success-badge {
+      background-color: #28a745;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      margin-left: 10px;
+    }
   </style>
 </head>
 
 <body>
   <header>Carte Canadienne du Handicap – Espace Utilisateur</header>
   <div class="container">
-    <h2>Informations Personnelles</h2>
-    <div class="info">
-      <p><strong>Prénom :</strong> <span id="prenom">—</span></p>
-      <p><strong>Nom :</strong> <span id="nom">—</span></p>
-      <p><strong>Email :</strong> <span id="email">—</span></p>
-      <p><strong>Adresse :</strong> <span id="adresse">—</span></p>
-      <p><strong>Numéro de compte :</strong> <span id="numeroCompte">—</span></p>
+    <div id="loadingDiv" class="loading">
+      ⏳ Chargement de vos informations...
     </div>
 
-    <h2>Services et Accommodements</h2>
-    <div class="services">
-      <ul id="servicesList"><li>Chargement des services…</li></ul>
+    <div id="errorDiv" class="error-message" style="display: none;">
+      <p><strong> Erreur de connexion</strong></p>
+      <p>Impossible de se connecter au serveur. Assurez-vous que le backend Node.js est démarré sur le port 3000.</p>
+      <p><small>Commande: <code>npm start</code></small></p>
     </div>
 
-    <div class="qr-section">
-      <h2>Votre QR Code</h2>
-      <img id="qrCode" src="" alt="QR Code utilisateur">
-      <p>Présentez ce code pour vérifier vos droits d’accommodement.</p>
-    </div>
+    <div id="contentDiv" style="display: none;">
+      <h2>Informations Personnelles</h2>
+      <div class="info">
+        <p><strong>Prénom :</strong> <span id="prenom">—</span></p>
+        <p><strong>Nom :</strong> <span id="nom">—</span></p>
+        <p><strong>Email :</strong> <span id="email">—</span></p>
+        <p><strong>Adresse :</strong> <span id="adresse">—</span></p>
+        <p><strong>Statut :</strong> <span class="success-badge">✓ VALIDÉ</span></p>
+      </div>
 
-    <a href="index.html" class="logout">Se Déconnecter</a>
+      <div class="numero-section">
+        <h2> Votre Numéro de Compte</h2>
+        <div class="numero-compte-display" id="numeroCompteDisplay">
+          —
+        </div>
+        <p style="font-size: 14px; margin-top: 15px;">
+          Présentez ce numéro pour vérifier vos droits aux services et accommodements
+        </p>
+      </div>
+
+      <h2>Services et Accommodements Autorisés</h2>
+      <div class="services">
+        <ul id="servicesList">
+          <li>Chargement des services…</li>
+        </ul>
+      </div>
+
+      <a href="page_connexion.html" class="logout" onclick="sessionStorage.clear();">
+        Se Déconnecter
+      </a>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script>
-    // Exemple simulé — ces données viendront du backend (Node.js / MySQL)
-    const utilisateur = {
-      prenom: "Younes",
-      nom: "Chaouni",
-      email: "younes.chaouni@example.com",
-      adresse: "75 Laurier Ave, Ottawa, ON",
-      numero_de_compte: "ACC234578",
-      services: [
-        { nom: "Stationnement gratuit", province: "Ontario" },
-        { nom: "Accès prioritaire dans les files d’attente", province: "Ontario" },
-        { nom: "Réductions sur le transport public", province: "Ontario" }
-      ]
-    };
+    let userId, numeroCompte, userEmail;
 
-    // Remplir les champs
-    document.getElementById("prenom").textContent = utilisateur.prenom;
-    document.getElementById("nom").textContent = utilisateur.nom;
-    document.getElementById("email").textContent = utilisateur.email;
-    document.getElementById("adresse").textContent = utilisateur.adresse;
-    document.getElementById("numeroCompte").textContent = utilisateur.numero_de_compte;
+    window.addEventListener('load', function() {
+      console.log('Page chargée');
+      
+      userId = sessionStorage.getItem('userId');
+      numeroCompte = sessionStorage.getItem('numeroCompte');
+      userEmail = sessionStorage.getItem('userEmail');
 
-    // Liste des services
-    const ul = document.getElementById("servicesList");
-    ul.innerHTML = "";
-    utilisateur.services.forEach(s => {
-      const li = document.createElement("li");
-      li.innerHTML = `<strong>${s.nom}</strong> (${s.province})`;
-      ul.appendChild(li);
+      console.log('Session data:', { userId, numeroCompte, userEmail });
+
+      if (!userId || !numeroCompte) {
+        console.log('Pas de session, redirection vers connexion');
+        alert('Veuillez vous connecter');
+        window.location.href = 'page_connexion.html';
+        return;
+      }
+      
+      loadUserData();
     });
 
-    // Génération du QR code
-    QRCode.toDataURL(utilisateur.numero_de_compte, { width: 160 }, function (err, url) {
-      document.getElementById("qrCode").src = url;
-    });
+    async function loadUserData() {
+      console.log('Début chargement données utilisateur...');
+      
+      try {
+        console.log('Requête API user:', `http://localhost:3000/api/user/${userId}`);
+        const userResponse = await fetch(`http://localhost:3000/api/user/${userId}`);
+        
+        if (!userResponse.ok) {
+          throw new Error('Erreur serveur: ' + userResponse.status);
+        }
+        
+        const userData = await userResponse.json();
+        console.log('Données utilisateur reçues:', userData);
+
+        document.getElementById('prenom').textContent = userData.first_name || '—';
+        document.getElementById('nom').textContent = userData.last_name || '—';
+        document.getElementById('email').textContent = userData.email || '—';
+        document.getElementById('adresse').textContent = userData.address || '—';
+        document.getElementById('numeroCompteDisplay').textContent = userData.numero_de_compte || '—';
+
+        console.log('Requête API services:', `http://localhost:3000/api/user/${userId}/services`);
+        const servicesResponse = await fetch(`http://localhost:3000/api/user/${userId}/services`);
+        
+        if (!servicesResponse.ok) {
+          throw new Error('Erreur serveur services: ' + servicesResponse.status);
+        }
+        
+        const servicesData = await servicesResponse.json();
+        console.log('Services reçus:', servicesData);
+
+        const ul = document.getElementById('servicesList');
+        ul.innerHTML = '';
+
+        if (servicesData.length === 0) {
+          ul.innerHTML = '<li>Aucun service disponible pour le moment.</li>';
+        } else {
+          servicesData.forEach(service => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <div class="service-name">✓ ${service.service_name}</div>
+              <div class="service-description">${service.service_description}</div>
+              <div class="service-province">Province: ${service.province}</div>
+            `;
+            ul.appendChild(li);
+          });
+        }
+
+        document.getElementById('loadingDiv').style.display = 'none';
+        document.getElementById('contentDiv').style.display = 'block';
+        console.log('Affichage terminé!');
+
+      } catch (error) {
+        console.error('ERREUR complète:', error);
+        document.getElementById('loadingDiv').style.display = 'none';
+        document.getElementById('errorDiv').style.display = 'block';
+      }
+    }
   </script>
 </body>
 </html>

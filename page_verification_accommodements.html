@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vérification des Accommodements - Gouvernement du Canada</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      background-color: #00205b; 
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      color: #00205b;
+      border-bottom: 2px solid #00205b;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+    .search-section {
+      background-color: #f0f4f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .search-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00205b;
+    }
+    .search-section input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #00205b;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .search-section button {
+      width: 100%;
+      background-color: #00205b;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .search-section button:hover {
+      background-color: #003380;
+    }
+    .search-section button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .result-section {
+      display: none;
+    }
+    .user-info {
+      background-color: #e6f2ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #00205b;
+    }
+    .user-info p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    .user-info strong {
+      color: #00205b;
+    }
+    .services-list {
+      list-style: none;
+      padding: 0;
+    }
+    .services-list li {
+      background: #f8f9fa;
+      padding: 15px;
+      border-left: 4px solid #28a745;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .service-name {
+      font-weight: bold;
+      color: #00205b;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .service-description {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .service-province {
+      font-size: 13px;
+      color: #666;
+      font-style: italic;
+    }
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+    .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #f5c6cb;
+      margin: 20px 0;
+    }
+    .success-badge {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .instructions {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-button {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .back-button:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+
+<body>
+  <header>Vérification des Accommodements</header>
+  
+  <div class="container">
+    <div class="instructions">
+      <strong>Instructions:</strong> Scannez la carte du client ou entrez manuellement son numéro de compte pour vérifier ses droits aux services et accommodements.
+    </div>
+
+    <div class="search-section">
+      <h2>Recherche par Numéro de Compte</h2>
+      <label for="numeroCompte">Numéro de compte du client:</label>
+      <input 
+        type="text" 
+        id="numeroCompte" 
+        placeholder="Ex: ACC123456789"
+        maxlength="20"
+      >
+      <button id="searchBtn" onclick="verifyAccount()">Vérifier</button>
+    </div>
+
+    <div id="errorDiv" style="display: none;" class="error-message"></div>
+
+    <div id="resultSection" class="result-section">
+      <h2>Informations du Client</h2>
+      <div class="user-info">
+        <p><strong>Nom complet:</strong> <span id="userName"></span> <span class="success-badge">✓ VALIDÉ</span></p>
+        <p><strong>Numéro de compte:</strong> <span id="userNumero"></span></p>
+      </div>
+
+      <h2>Services et Accommodements Autorisés</h2>
+      <ul id="servicesList" class="services-list"></ul>
+
+      <button class="back-button" onclick="resetSearch()">Nouvelle Recherche</button>
+    </div>
+
+    <div id="noResultDiv" style="display: none;" class="no-results">
+      <p><strong>Aucun résultat trouvé</strong></p>
+      <p>Le numéro de compte n'existe pas ou n'est pas validé.</p>
+      <button class="back-button" onclick="resetSearch()">Réessayer</button>
+    </div>
+  </div>
+
+  <script>
+    // Permettre la recherche avec Enter
+    document.getElementById('numeroCompte').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyAccount();
+      }
+    });
+
+    async function verifyAccount() {
+      const numeroCompte = document.getElementById('numeroCompte').value.trim();
+      const searchBtn = document.getElementById('searchBtn');
+      
+      // Cacher les messages précédents
+      document.getElementById('errorDiv').style.display = 'none';
+      document.getElementById('resultSection').style.display = 'none';
+      document.getElementById('noResultDiv').style.display = 'none';
+
+      if (!numeroCompte) {
+        showError('Veuillez entrer un numéro de compte');
+        return;
+      }
+
+      // Désactiver le bouton pendant la recherche
+      searchBtn.disabled = true;
+      searchBtn.textContent = 'Vérification en cours...';
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/verify/${numeroCompte}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          // Afficher les résultats
+          displayResults(data);
+        } else if (response.status === 404) {
+          document.getElementById('noResultDiv').style.display = 'block';
+        } else if (response.status === 403) {
+          showError('Ce compte n\'est pas encore validé ou a été rejeté.');
+        } else {
+          showError(data.message || 'Une erreur est survenue');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        showError('Erreur de connexion au serveur');
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.textContent = 'Vérifier';
+      }
+    }
+
+    function displayResults(data) {
+      // Afficher les infos utilisateur
+      document.getElementById('userName').textContent = 
+        `${data.user.firstName} ${data.user.lastName}`;
+      document.getElementById('userNumero').textContent = data.user.numeroCompte;
+
+      // Afficher les services
+      const servicesList = document.getElementById('servicesList');
+      servicesList.innerHTML = '';
+
+      if (data.services.length === 0) {
+        servicesList.innerHTML = '<li>Aucun service enregistré.</li>';
+      } else {
+        data.services.forEach(service => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="service-name">✓ ${service.service_name}</div>
+            <div class="service-description">${service.service_description}</div>
+            <div class="service-province">Province: ${service.province}</div>
+          `;
+          servicesList.appendChild(li);
+        });
+      }
+
+      // Afficher la section résultats
+      document.getElementById('resultSection').style.display = 'block';
+
+      // Cacher la section de recherche
+      document.querySelector('.search-section').style.display = 'none';
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorDiv');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+
+    function resetSearch() {
+      document.getElementById('numeroCompte').value = '';
+      document.getElementById('errorDiv').style.display = 'none';
+      document.getElementById('resultSection').style.display = 'none';
+      document.getElementById('noResultDiv').style.display = 'none';
+      document.querySelector('.search-section').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

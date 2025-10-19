@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Gouvernement du Canada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f8f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .gov-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .gov-header img {
+            height: 40px;
+        }
+
+        .gov-logo-section {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .gov-logo-section img {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .gov-logo-section p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0b2336;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 10px 0 20px 0;
+            color: #0b2336;
+            font-weight: 700;
+        }
+
+        .description {
+            background-color: #f0f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0b2336;
+            margin-bottom: 5px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #0b2336;
+        }
+
+        button {
+            width: 100%;
+            background-color: #0b1a33;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #13294b;
+        }
+
+        .link-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .link-section a {
+            color: #0b2336;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-section a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #0b2336;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gov-header">
+            <div class="gov-logo-section">
+                <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-en.svg" alt="Logo du Canada">
+                <p>Gouvernement<br>du Canada</p>
+            </div>
+        </div>
+
+        <h2>Connexion</h2>
+
+        <div class="description">
+            <strong>Conception numérique : Site web</strong><br>
+            Le site permet aux utilisateurs de créer un compte, de vérifier leur éligibilité pour obtenir des services spécifiques et de recevoir une carte physique qui leur donne la priorité dans les files d'attente.
+        </div>
+
+        <form id="loginForm">
+            <div>
+                <label for="email">Courriel</label>
+                <input type="email" id="email" name="email" placeholder="votre.email@exemple.com" required>
+            </div>
+
+            <div>
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Mot de passe oublié?</a>
+            </div>
+
+            <button type="submit">Se connecter</button>
+        </form>
+
+        <div class="link-section">
+            <p>Vous n'avez pas de compte?</p>
+            <a href="page_inscription.html">S'inscrire maintenant</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Désactiver le bouton pendant la connexion
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Connexion en cours...';
+
+            try {
+                // Appel API vers le backend
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                console.log('Réponse du serveur:', data); // Pour debug
+
+                if (response.ok) {
+                    // Stocker les infos utilisateur en mémoire (session)
+                    sessionStorage.setItem('userId', data.userId);
+                    sessionStorage.setItem('numeroCompte', data.numeroCompte);
+                    sessionStorage.setItem('userEmail', email);
+                    
+                    console.log('Session storage set:', {
+                        userId: sessionStorage.getItem('userId'),
+                        numeroCompte: sessionStorage.getItem('numeroCompte')
+                    });
+                    
+                    // Redirection AVANT l'alerte
+                    window.location.replace('page_utilisateur.html');
+                } else {
+                    alert('❌ ' + (data.message || 'Erreur de connexion'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Se connecter';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion au serveur');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Se connecter';
+            }
+        });
+    </script>
+</body>
+</html>

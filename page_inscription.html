@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Gouvernement du Canada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f8f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .gov-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .gov-header img {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .gov-header p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0b2336;
+            line-height: 1.2;
+        }
+
+        .gov-header a {
+            text-decoration: none;
+            color: #0b2336;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 6px 0 18px 0;
+            color: #0b2336;
+            font-weight: 700;
+        }
+
+        .form-section {
+            border: 2px solid #333;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0b2336;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select[multiple] {
+            height: 140px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #0b2336;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        .terms {
+            text-align: left;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .terms input {
+            margin-right: 6px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #0b1a33;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #13294b;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gov-header">
+            <div style="display: flex; align-items: flex-start;">
+                <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-en.svg" alt="Logo du Canada">
+                <p>Gouvernement<br>du Canada</p>
+            </div>
+            <a href="page_connexion.html">Se connecter</a>
+        </div>
+
+        <h2>Page d'Inscription</h2>
+
+        <div class="form-section">
+            <form id="inscriptionForm">
+                <div>
+                    <label for="prenom">Prénom *</label>
+                    <input type="text" id="prenom" name="prenom" required>
+                </div>
+
+                <div>
+                    <label for="nom">Nom de famille *</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+
+                <div>
+                    <label for="email">Courriel *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div>
+                    <label for="adresse">Adresse postale *</label>
+                    <input type="text" id="adresse" name="adresse" placeholder="123 Rue Exemple, Ville, Province, Code Postal" required>
+                </div>
+
+                <div>
+                    <label for="password">Créer un mot de passe *</label>
+                    <input type="password" id="password" name="password" minlength="8" required>
+                    <div class="helper-text">Minimum 8 caractères</div>
+                </div>
+
+                <div>
+                    <label for="handicapType">Type(s) de handicap * (maintenez Ctrl/Cmd pour sélectionner plusieurs)</label>
+                    <select id="handicapType" name="handicapType" multiple required>
+                        <option value="1">Handicap physique - Mobilité</option>
+                        <option value="2">Handicap physique - Dextérité</option>
+                        <option value="3">Handicap physique - Flexibilité</option>
+                        <option value="4">Handicap sensoriel - Vue</option>
+                        <option value="5">Handicap sensoriel - Audition</option>
+                        <option value="6">Handicap intellectuel</option>
+                        <option value="7">Trouble du spectre autistique (TSA)</option>
+                        <option value="8">Handicap lié à la santé mentale</option>
+                        <option value="9">Handicap cognitif</option>
+                        <option value="10">Handicap lié à la douleur</option>
+                    </select>
+                    <div class="helper-text">Sélectionnez un ou plusieurs types de handicap</div>
+                </div>
+
+                <div>
+                    <label for="proofDocument">Preuve médicale (Formulaire T2201 ou billet médical) *</label>
+                    <input type="file" id="proofDocument" name="proofDocument" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <div class="helper-text">Formats acceptés: PDF, JPG, PNG (Max: 5MB)</div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Note importante:</strong> Une fois votre document téléversé, une vérification manuelle sera effectuée par notre équipe. Vous recevrez une notification une fois votre compte validé.
+                </div>
+
+                <div class="terms">
+                    <label>
+                        <input type="checkbox" id="acceptTerms" required>
+                        J'ai lu et j'accepte les termes et conditions
+                    </label>
+                </div>
+
+                <button type="submit" id="submitBtn">Soumettre l'inscription</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('inscriptionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi en cours...';
+
+            // Récupérer les valeurs du formulaire
+            const formData = new FormData();
+            formData.append('prenom', document.getElementById('prenom').value);
+            formData.append('nom', document.getElementById('nom').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('adresse', document.getElementById('adresse').value);
+            formData.append('password', document.getElementById('password').value);
+            
+            // Récupérer les types de handicap sélectionnés
+            const handicapSelect = document.getElementById('handicapType');
+            const selectedHandicaps = Array.from(handicapSelect.selectedOptions).map(opt => opt.value);
+            formData.append('handicapTypes', JSON.stringify(selectedHandicaps));
+            
+            // Ajouter le fichier
+            const fileInput = document.getElementById('proofDocument');
+            if (fileInput.files.length > 0) {
+                formData.append('proofDocument', fileInput.files[0]);
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/inscription', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(`✅ Inscription réussie!\n\n` +
+                          `Votre document a été téléversé et est en cours de vérification.\n\n` +
+                          `Votre numéro de compte: ${data.numeroCompte}\n\n` +
+                          `Une fois votre document approuvé, vous pourrez vous connecter avec votre email et mot de passe.`);
+                    
+                    // Rediriger vers la page de connexion
+                    setTimeout(() => {
+                        window.location.href = 'page_connexion.html';
+                    }, 2000);
+                } else {
+                    alert('❌ Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Soumettre l\'inscription';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('❌ Erreur de connexion au serveur');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Soumettre l\'inscription';
+            }
+        });
+
+        // Vérifier qu'au moins un handicap est sélectionné
+        document.getElementById('handicapType').addEventListener('change', function() {
+            if (this.selectedOptions.length === 0) {
+                this.setCustomValidity('Veuillez sélectionner au moins un type de handicap');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>
