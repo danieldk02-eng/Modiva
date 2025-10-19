@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Canadienne du Handicap - Accueil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .logo-section {
+            margin-bottom: 30px;
+        }
+
+        .logo-section img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #00205b;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .description {
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background-color: #00205b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-tertiary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00205b;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #00205b;
+            margin-bottom: 5px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-en.svg" alt="Logo Canada">
+            <h1>Modiva</h1>
+            <p class="subtitle">Système de gestion des accommodements</p>
+        </div>
+
+        <div class="description">
+            <strong>Bienvenue!</strong><br><br>
+            Ce système permet aux personnes en situation de handicap de:
+            <ul style="text-align: left; margin-top: 10px;">
+                <li> Accéder à leurs services et accommodements partout au Canada</li>
+            </ul>
+        </div>
+
+        <div class="buttons">
+            <a href="page_connexion.html" class="btn btn-primary">
+                 Se Connecter
+            </a>
+            <a href="page_inscription.html" class="btn btn-secondary">
+                 S'inscrire
+            </a>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">👤</div>
+                <div class="feature-title">Pour Utilisateurs</div>
+                <div class="feature-desc">Gérez votre compte et vos services</div>
+            </div>
+            <div class="feature">
+            
+                <div class="feature-title">Pour Employés</div>
+                <div class="feature-desc">
+                    <a href="page_verification_accommodements.html" style="color: #00205b; text-decoration: none;">
+                        Vérifier les droits →
+                    </a>
+                </div>
+            </div>
+            <div class="feature">
+                
+                <div class="feature-title">Administration</div>
+                <div class="feature-desc">
+                    <a href="page_admin_validation.html" style="color: #00205b; text-decoration: none;">
+                        Valider comptes →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

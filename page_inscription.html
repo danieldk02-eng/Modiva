@@ -276,13 +276,13 @@
                         window.location.href = 'page_connexion.html';
                     }, 2000);
                 } else {
-                    alert('❌ Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    alert(' Erreur: ' + (data.message || 'Une erreur est survenue'));
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Soumettre l\'inscription';
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('❌ Erreur de connexion au serveur');
+                alert(' Erreur de connexion au serveur');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Soumettre l\'inscription';
             }
