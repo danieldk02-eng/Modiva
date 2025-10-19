@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Proof Page - Government of Canada</title>
+  <style>
+    
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f3f2; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    
+    .container {
+      background-color: #fff;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      width: 420px;
+      text-align: left;
+      position: relative;
+    }
+
+    
+    .gov-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .gov-header .left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .gov-header img {
+      width: 74px; 
+      height: auto;
+      display: block;
+    }
+
+    .gov-header .gov-text {
+      font-size: 14px;
+      line-height: 1.05;
+      font-weight: 600;
+      color: #0b2336;
+    }
+
+    .gov-header a {
+      text-decoration: none;
+      color: #0b2336;
+      font-size: 14px;
+      align-self: flex-start;
+    }
+
+    
+    .title {
+      font-size: 28px;
+      margin: 6px 0 18px 0;
+      color: #0b2336;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    
+    .upload-box {
+      border: 2px solid #333;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      background: #fff;
+    }
+
+    .upload-box p {
+      margin: 0 0 12px 0;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #0b2336;
+      font-weight: 600;
+    }
+
+    
+    .file-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #d0d3d4;
+      border-radius: 6px;
+      padding: 6px 8px;
+      width: 100%;
+      max-width: 100%;
+      background: #fff;
+    }
+
+    .fake-choose {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #d0d3d4;
+      background: #f7f7f7;
+      font-size: 14px;
+    }
+
+    .no-file {
+      font-size: 14px;
+      color: #6b6f73;
+      flex: 1;
+    }
+
+    
+    input[type="file"] {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    
+    .submit-row {
+      margin-top: 16px;
+    }
+
+    button.submit {
+      width: 100%;
+      background-color: #0b2336; 
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.submit:hover {
+      background-color: #0f2f48;
+    }
+
+
+    @media (max-width: 460px) {
+      .container { width: 92%; padding: 18px; }
+      .title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="gov-header">
+      <div class="left">
+        
+        <img src="canada.jpg" alt="Drapeau Canada">
+        <div class="gov-text">
+          Government<br>of Canada
+        </div>
+      </div>
+      <a href="#">Sign out</a>
+    </div>
+
+    <div class="title">Upload Proof Page</div>
+
+    <div class="upload-box">
+      <p>Please upload a document as proof of eligibility.</p>
+
+      <form id="uploadForm">
+        <label class="field-label" for="fileInput">Upload document</label>
+
+        
+        <label class="file-wrapper" id="fileLabel">
+            <span class="fake-choose">Choose file</span>
+            <span class="no-file" id="fileName">No file chosen</span>
+        </label>
+        <input id="fileInput" type="file" name="proof" accept=".pdf,.jpg,.png,.jpeg" style="display:none;" />
+
+
+        <div class="submit-row">
+          <button class="submit" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length === 0) {
+        fileName.textContent = 'No file chosen';
+      } else {
+        
+        fileName.textContent = fileInput.files[0].name;
+      }
+    });
+
+   
+    document.querySelector('.file-wrapper').addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    
+    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!fileInput.files.length) {
+        alert('Please choose a file before submitting.');
+        return;
+      }
+      
+      alert('File ready to be uploaded: ' + fileInput.files[0].name);
+    });
+  </script>
+</body>
+</html>
