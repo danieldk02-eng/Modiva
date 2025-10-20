@@ -41,7 +41,7 @@
     }
     .stat-card {
       flex: 1;
-      background: linear-gradient(135deg, #667eea 0%, #0261b9 100%);
+      background: linear-gradient(135deg, #667eea 0%, #1e439a 100%);
       color: white;
       padding: 20px;
       border-radius: 10px;
@@ -178,8 +178,24 @@
   </div>
 
   <script>
-    // Charger les utilisateurs en attente au chargement de la page
-    loadPendingUsers();
+    // Vérifier l'authentification admin au chargement de la page
+    window.addEventListener('load', function() {
+      const isAdminAuthenticated = sessionStorage.getItem('adminAuth');
+      
+      if (isAdminAuthenticated !== 'authenticated') {
+        const password = prompt(' Accès réservé aux administrateurs. Entrez le mot de passe:');
+        
+        if (password === 'admin123') {
+          sessionStorage.setItem('adminAuth', 'authenticated');
+          loadPendingUsers();
+        } else {
+          alert(' Accès refusé!');
+          window.location.href = 'index.html';
+        }
+      } else {
+        loadPendingUsers();
+      }
+    });
 
     async function loadPendingUsers() {
       document.getElementById('loadingDiv').style.display = 'block';
@@ -256,14 +272,14 @@
         const data = await response.json();
 
         if (response.ok) {
-          alert(`✅ ${data.message}`);
+          alert(` ${data.message}`);
           loadPendingUsers(); // Recharger la liste
         } else {
-          alert(`❌ Erreur: ${data.message}`);
+          alert(` Erreur: ${data.message}`);
         }
       } catch (error) {
         console.error('Erreur:', error);
-        alert('❌ Erreur de connexion au serveur');
+        alert(' Erreur de connexion au serveur');
       }
     }
   </script>

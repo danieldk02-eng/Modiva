@@ -182,13 +182,13 @@
 
         <div class="description">
             <strong>Bienvenue!</strong><br><br>
-            Modiva permet aux personnes en situation de handicap d'accéder à leurs services et accommodements partout au Canada:
-            
+           Modiva permet aux personnes en situation de handicap d'accéder à leurs services et accommodements
+           
         </div>
 
         <div class="buttons">
             <a href="page_connexion.html" class="btn btn-primary">
-                 Se Connecter
+                Se Connecter
             </a>
             <a href="page_inscription.html" class="btn btn-secondary">
                  S'inscrire
@@ -197,12 +197,12 @@
 
         <div class="features">
             <div class="feature">
-                <div class="feature-icon"></div>
+                
                 <div class="feature-title">Pour Utilisateurs</div>
                 <div class="feature-desc">Gérez votre compte et vos services</div>
             </div>
             <div class="feature">
-                <div class="feature-icon"></div>
+                
                 <div class="feature-title">Pour Employés</div>
                 <div class="feature-desc">
                     <a href="page_verification_accommodements.html" style="color: #00205b; text-decoration: none;">
@@ -210,7 +210,33 @@
                     </a>
                 </div>
             </div>
+            <div class="feature">
+                
+                <div class="feature-title">Administration</div>
+                <div class="feature-desc">
+                    <a href="#" onclick="adminAccess(event)" style="color: #00205b; text-decoration: none; cursor: pointer;">
+                        Accès Admin 
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        function adminAccess(event) {
+            event.preventDefault();
+            
+            const password = prompt(' Entrez le mot de passe administrateur:');
+            
+            if (password === 'admin123') {
+                window.location.href = 'page_admin_validation.html';
+            } else if (password === null) {
+                // L'utilisateur a annulé
+                return;
+            } else {
+                alert(' Mot de passe incorrect!');
+            }
+        }
+    </script>
 </body>
 </html>
