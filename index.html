@@ -7,73 +7,110 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .container {
             background-color: white;
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
+            padding: 60px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
         }
 
         .logo-section {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            text-align: center;
         }
 
         .logo-section img {
-            width: 100px;
+            width: 120px;
             margin-bottom: 20px;
         }
 
         h1 {
             color: #00205b;
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 48px;
+            margin-bottom: 15px;
         }
 
         .subtitle {
             color: #666;
-            font-size: 18px;
-            margin-bottom: 40px;
+            font-size: 24px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+            .subtitle {
+                font-size: 18px;
+            }
         }
 
         .description {
             background-color: #f0f4f8;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             text-align: left;
-            line-height: 1.6;
+            line-height: 1.8;
             color: #333;
+            font-size: 18px;
+        }
+
+        .description ul {
+            margin-top: 15px;
+            padding-left: 20px;
+        }
+
+        .description li {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .description {
+                font-size: 16px;
+                padding: 20px;
+            }
         }
 
         .buttons {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 50px;
         }
 
         .btn {
-            padding: 15px 40px;
+            padding: 18px 50px;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%;
+                padding: 15px 30px;
+                font-size: 18px;
+            }
         }
 
         .btn:hover {
@@ -97,32 +134,40 @@
         }
 
         .features {
-            margin-top: 40px;
+            margin-top: 50px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        @media (max-width: 568px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
         }
 
         .feature {
             background-color: #e6f2ff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 10px;
             border-left: 4px solid #00205b;
+            text-align: center;
         }
 
         .feature-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 48px;
+            margin-bottom: 15px;
         }
 
         .feature-title {
             font-weight: 600;
             color: #00205b;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 20px;
         }
 
         .feature-desc {
-            font-size: 14px;
+            font-size: 16px;
             color: #666;
         }
     </style>
@@ -137,9 +182,11 @@
 
         <div class="description">
             <strong>Bienvenue!</strong><br><br>
-            Ce système permet aux personnes en situation de handicap de:
+            Modiva permet aux personnes en situation de handicap de:
             <ul style="text-align: left; margin-top: 10px;">
-                <li> Accéder à leurs services et accommodements partout au Canada</li>
+               
+                <li>✅ Accéder à leurs services et accommodements partout au Canada</li>
+          
             </ul>
         </div>
 
@@ -154,12 +201,12 @@
 
         <div class="features">
             <div class="feature">
-                <div class="feature-icon">👤</div>
+                <div class="feature-icon"></div>
                 <div class="feature-title">Pour Utilisateurs</div>
                 <div class="feature-desc">Gérez votre compte et vos services</div>
             </div>
             <div class="feature">
-            
+                <div class="feature-icon"></div>
                 <div class="feature-title">Pour Employés</div>
                 <div class="feature-desc">
                     <a href="page_verification_accommodements.html" style="color: #00205b; text-decoration: none;">
@@ -167,7 +214,6 @@
                     </a>
                 </div>
             </div>
-            
         </div>
     </div>
 </body>

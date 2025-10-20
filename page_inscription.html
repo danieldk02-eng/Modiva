@@ -263,9 +263,20 @@
                     body: formData
                 });
 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
 
-                if (response.ok) {
+                let data;
+                try {
+                    const text = await response.text();
+                    console.log('Response text:', text);
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Erreur parsing JSON:', e);
+                    throw new Error('Réponse invalide du serveur');
+                }
+
+                if (response.ok && response.status === 201) {
                     alert(`✅ Inscription réussie!\n\n` +
                           `Votre document a été téléversé et est en cours de vérification.\n\n` +
                           `Votre numéro de compte: ${data.numeroCompte}\n\n` +
@@ -276,13 +287,13 @@
                         window.location.href = 'page_connexion.html';
                     }, 2000);
                 } else {
-                    alert(' Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    alert('❌ Erreur: ' + (data.message || 'Une erreur est survenue'));
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Soumettre l\'inscription';
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert(' Erreur de connexion au serveur');
+                alert('❌ Erreur de connexion au serveur');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Soumettre l\'inscription';
             }
