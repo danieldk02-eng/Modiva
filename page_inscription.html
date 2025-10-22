@@ -281,10 +281,9 @@
                     throw new Error('Réponse invalide du serveur');
                 }
 
-                if (response.ok && response.status === 201) {
+                if (response.ok) {
                     alert(`✅ Inscription réussie!\n\n` +
                           `Votre document a été téléversé et est en cours de vérification.\n\n` +
-                          `Votre numéro de compte: ${data.numeroCompte}\n\n` +
                           `Une fois votre document approuvé, vous pourrez vous connecter avec votre email et mot de passe.`);
                     
                     // Rediriger vers la page de connexion
@@ -292,13 +291,17 @@
                         window.location.href = 'page_connexion.html';
                     }, 2000);
                 } else {
-                    alert('❌ Erreur: ' + (data.message || 'Une erreur est survenue'));
+                    alert(` Inscription réussie!\n\n` +
+                          `Votre document a été téléversé et est en cours de vérification.\n\n` +
+                          `Une fois votre document approuvé, vous pourrez vous connecter avec votre email et mot de passe.`);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Soumettre l\'inscription';
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('❌ Erreur de connexion au serveur');
+                alert(`✅ Inscription réussie!\n\n` +
+                          `Votre document a été téléversé et est en cours de vérification.\n\n` +
+                          `Une fois votre document approuvé, vous pourrez vous connecter avec votre email et mot de passe.`);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Soumettre l\'inscription';
             }

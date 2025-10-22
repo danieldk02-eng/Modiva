@@ -397,53 +397,6 @@ app.get('/api/admin/pending-users', (req, res) => {
         res.json(results);
     });
 });
-// CHECK RFID
-// Sa va retourner { access: "GRANTED"|"DENIED", name: "First Last", reason?: "...", disability_category?: "..." }
-app.post('/check', (req, res) => {
-  const uidRaw = (req.body && req.body.uid) ? String(req.body.uid) : '';
-  const uid = uidRaw.trim().toUpperCase();
-  if (!uid) return res.status(400).json({ access: 'DENIED', reason: 'no_uid' });
-
-  // Look up by UID, join to user to get name + validation status, this expects a table "rfid_cards" that links a card UID to a user
-  const sql = `
-    SELECT 
-      c.uid,
-      c.active,
-      c.expires_at,
-      u.first_name,
-      u.last_name,
-      u.statut_validation
-    FROM rfid_cards c
-    LEFT JOIN user_info u ON u.user_id = c.user_id
-    WHERE UPPER(c.uid) = ? 
-    LIMIT 1
-  `;
-
-  db.query(sql, [uid], (err, rows) => {
-    if (err) {
-      console.error('DB error /check:', err);
-      return res.status(500).json({ access: 'DENIED', reason: 'db_error' });
-    }
-    if (!rows || rows.length === 0) {
-      return res.json({ access: 'DENIED', name: '', reason: 'unknown_uid' });
-    }
-
-    const r = rows[0];
-    const now = new Date();
-    const notExpired = !r.expires_at || new Date(r.expires_at) > now;
-    const isActive = !!r.active;
-    const isValidated = r.statut_validation === 'valide';
-
-    const granted = isActive && notExpired && isValidated;
-
-    return res.json({
-      access: granted ? 'GRANTED' : 'DENIED',
-      name: `${r.first_name || ''} ${r.last_name || ''}`.trim(),
-      // you can add disability_category later with an extra JOIN if needed
-      reason: granted ? undefined : (!isActive ? 'inactive_card' : (!notExpired ? 'expired' : (!isValidated ? 'not_validated' : 'denied')))
-    });
-  });
-});
 
 // Démarrer le serveur
 app.listen(PORT, () => {
