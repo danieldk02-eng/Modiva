@@ -20,42 +20,34 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
-// ✅ Database Connection (Railway + Local Compatible)
-let connectionUri =
-  process.env.MYSQL_URL ||
-  process.env.MYSQL_PUBLIC_URL ||
-  process.env.DATABASE_URL ||
-  process.env.MYSQL_INTERNAL_URL;
 
-if (process.env.RAILWAY_ENVIRONMENT_NAME && connectionUri.includes('mysql.railway.internal')) {
-  // Switch to proxy if internal DB isn't reachable
-  console.log('⚠️ Switching to public proxy (internal DB not accessible)');
-  connectionUri = 'mysql://root:LyPSnPgwtmLuUVIYzskqChmOTKZTYSmn@crossover.proxy.rlwy.net:33162/railway';
+// ------------------------------
+// ✅ Database Connection (Railway internal only)
+// ------------------------------
+const isRailway = !!process.env.RAILWAY_ENVIRONMENT_NAME;
+let connectionUri;
+
+if (isRailway) {
+  connectionUri = process.env.MYSQL_INTERNAL_URL; // internal DB for Railway
+  console.log('📦 Running on Railway → using INTERNAL DB');
+} else {
+  connectionUri = process.env.MYSQL_PUBLIC_URL || 'mysql://root@localhost:3306/railway';
+  console.log('💻 Running locally → using PUBLIC DB');
 }
-
 
 if (!connectionUri) {
-  console.log('⚠️ No single URI found, falling back to manual connection settings');
-  connectionUri = `mysql://${process.env.MYSQLUSER || 'root'}:${process.env.MYSQLPASSWORD || ''}@${process.env.MYSQLHOST || 'localhost'}:${process.env.MYSQLPORT || 3306}/${process.env.MYSQL_DATABASE || 'railway'}`;
+  console.error('❌ Missing MySQL connection URI');
+  process.exit(1);
 }
 
-// Log which environment we’re in
-if (process.env.RAILWAY_ENVIRONMENT_NAME) {
-  console.log('📦 Running on Railway → using internal DB connection');
-} else {
-  console.log('💻 Running locally → using public DB connection');
-}
-
-// Create connection
 const db = mysql.createConnection(connectionUri);
 
 db.connect((err) => {
   if (err) {
-    console.error('❌ Erreur de connexion à la base de données MySQL:');
-    console.error(err.message || err);
-  } else {
-    console.log('✅ Connecté à la base de données MySQL');
+    console.error('❌ MySQL connect error:', err.message || err);
+    process.exit(1);
   }
+  console.log('✅ Connected to MySQL');
 });
 
 
@@ -124,15 +116,14 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
       const hashedPassword = await bcrypt.hash(password, 10);
       const numeroCompte = generateAccountNumber();
 
-      const insertUser = `
+            const insertUser = `
         INSERT INTO user_info 
-        (email, password, first_name, last_name, address, numero_de_compte, proof_document, statut_validation) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'en_attente')
+        (email, password, prenom, nom, adresse, status) 
+        VALUES (?, ?, ?, ?, ?, 'pending')
       `;
-
       db.query(
         insertUser,
-        [email, hashedPassword, prenom, nom, adresse, numeroCompte, req.file.filename],
+        [email, hashedPassword, prenom, nom, adresse],
         (err, result) => {
           if (err) {
             console.error(err);
@@ -140,6 +131,25 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
           }
 
           const userId = result.insertId;
+          // 🪪 Assign first available RFID tag to this user
+            const assignRFID = `
+            UPDATE rfid 
+            SET user_id = ? 
+            WHERE user_id IS NULL 
+            ORDER BY id ASC 
+            LIMIT 1
+            `;
+
+            db.query(assignRFID, [userId], (err, rfidResult) => {
+            if (err) {
+              console.error('❌ RFID assign error:', err);
+            } else if (rfidResult.affectedRows === 0) {
+              console.log('⚠️ No available RFID tags left!');
+            } else {
+              console.log(`✅ RFID tag assigned automatically to user ${userId}`);
+            }
+            });
+
 
           // Parser handicapTypes (string JSON, valeur simple, ou array)
           let handicapArray = [];
@@ -205,13 +215,13 @@ app.post('/api/login', (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
 
-    if (user.statut_validation === 'en_attente') {
+    if (user.status === 'pending') {
       return res.status(403).json({
         message: 'Votre compte est en attente de validation',
         statut: 'en_attente',
       });
     }
-    if (user.statut_validation === 'rejete') {
+    if (user.status === 'rejected') {
       return res.status(403).json({
         message: 'Votre demande a été rejetée',
         statut: 'rejete',
@@ -222,7 +232,7 @@ app.post('/api/login', (req, res) => {
       message: 'Connexion réussie',
       userId: user.user_id,
       numeroCompte: user.numero_de_compte,
-      statut: user.statut_validation,
+      statut: user.status, // 'pending', 'approved', or 'rejected'
     });
   });
 });
