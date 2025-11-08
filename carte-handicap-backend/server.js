@@ -91,11 +91,11 @@ function generateAccountNumber() {
 // ✅ Get pending users
 app.get('/api/admin/pending-users', (req, res) => {
   const query = `
-    SELECT id, prenom, nom, email, proof_document, created_at
-    FROM user_info
-    WHERE status = 'pending'
-    ORDER BY created_at DESC
-  `;
+  SELECT id, prenom, nom, email, proof_document, status, created_at
+  FROM user_info
+  WHERE status = 'pending'
+  ORDER BY created_at DESC
+`;
   db.query(query, (err, results) => {
     if (err) {
       console.error(err);
@@ -105,25 +105,87 @@ app.get('/api/admin/pending-users', (req, res) => {
   });
 });
 
+
 // ✅ Approve or reject user
+// ✅ Approve or reject user (improved and debugged)
 app.post('/api/validation/valider/:userId', (req, res) => {
-  const userId = req.params.userId;
-  const { approuve } = req.body;
+  const userId = Number(req.params.userId);
+  const raw = req.body?.approuve;
+  const approuve = raw === true || raw === 'true' || raw === 1 || raw === '1';
   const newStatus = approuve ? 'approved' : 'rejected';
 
+  console.log('🔧 Validation → userId=', userId, 'body.approuve=', req.body?.approuve, '→ interpreted as', approuve);
+
+  // 1️⃣ Update user status
   const updateUser = 'UPDATE user_info SET status = ? WHERE id = ?';
   db.query(updateUser, [newStatus, userId], (err, result) => {
     if (err) {
-      console.error(err);
+      console.error('❌ update user_info error:', err);
       return res.status(500).json({ message: 'Erreur lors de la validation' });
     }
+    console.log('ℹ️ updateUser affectedRows=', result.affectedRows);
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Utilisateur introuvable' });
     }
 
-    res.json({ message: `Utilisateur ${approuve ? 'validé' : 'rejeté'} avec succès` });
+    // If rejected, stop here
+    if (!approuve) {
+      console.log('ℹ️ User rejected → stop.');
+      return res.json({ message: 'Utilisateur rejeté avec succès' });
+    }
+
+
+    // Step 2: Check if user already has a tag
+    const checkExisting = 'SELECT id, rfid_tag FROM rfid WHERE user_id = ? LIMIT 1';
+    db.query(checkExisting, [userId], (err, existing) => {
+      if (err) {
+        console.error('❌ checkExisting error:', err);
+        return res.status(500).json({ message: 'Erreur vérification RFID' });
+      }
+
+      // If user already has a tag, just confirm it
+      if (existing.length > 0) {
+        console.log('ℹ️ User already has RFID:', existing[0].rfid_tag);
+        return res.json({
+          message: `Utilisateur déjà approuvé avec RFID ${existing[0].rfid_tag}`,
+          assigned_rfid: existing[0].rfid_tag
+        });
+      }
+
+      // Step 3: If not, assign a new available one
+      const findRFID = 'SELECT id, rfid_tag FROM rfid WHERE user_id IS NULL LIMIT 1';
+      db.query(findRFID, (err, rfidResults) => {
+        if (err) {
+          console.error('❌ findRFID error:', err);
+          return res.status(500).json({ message: 'Erreur recherche RFID' });
+        }
+
+        if (!rfidResults || rfidResults.length === 0) {
+          return res.json({
+            message: 'Utilisateur approuvé, mais aucun RFID disponible pour l’instant'
+          });
+        }
+
+        const rfid = rfidResults[0];
+        const assignRFID = 'UPDATE rfid SET user_id = ? WHERE id = ?';
+        db.query(assignRFID, [userId, rfid.id], (err) => {
+          if (err) {
+            console.error('❌ assignRFID error:', err);
+            return res.status(500).json({ message: 'Erreur assignation RFID' });
+          }
+
+          res.json({
+            message: `✅ Utilisateur approuvé et RFID ${rfid.rfid_tag} assigné avec succès.`,
+            assigned_rfid: rfid.rfid_tag
+          });
+        });
+      });
+    });
   });
-});
+  });
+
+
 
 // ------------------------------
 // ✅ User registration route (from old version)
@@ -202,6 +264,63 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+// ✅ Get user info
+app.get('/api/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = `
+    SELECT 
+      prenom AS first_name,
+      nom AS last_name,
+      email,
+      adresse AS address,
+      numero_de_compte
+    FROM user_info 
+    WHERE id = ?
+  `;
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Erreur MySQL:', err);
+      return res.status(500).json({ message: 'Erreur serveur' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// ✅ Get user services (for now: example data)
+app.get('/api/user/:id/services', (req, res) => {
+  // TODO: replace this with real data later
+  const demoServices = [
+    {
+      service_name: 'Transport adapté',
+      service_description: 'Accès au transport spécialisé pour personnes handicapées.',
+      province: 'Québec'
+    },
+    {
+      service_name: 'Subvention pour équipement',
+      service_description: 'Aide financière pour achat d’équipement adapté.',
+      province: 'Ontario'
+    }
+  ];
+  res.json(demoServices);
+});
+
+// 🔍 Debug endpoints
+app.get('/api/debug/db', (req, res) => {
+  db.query('SELECT DATABASE() AS db, @@hostname AS host, @@port AS port', (err, rows) => {
+    if (err) return res.status(500).json({ error: String(err) });
+    res.json(rows[0]);
+  });
+});
+
+app.get('/api/debug/rfid', (req, res) => {
+  db.query('SELECT * FROM rfid', (err, rows) => {
+    if (err) return res.status(500).json({ error: String(err) });
+    res.json(rows);
+  });
+});
 
 
 // ------------------------------
