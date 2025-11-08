@@ -44,10 +44,11 @@ const db = mysql.createConnection(connectionUri);
 
 db.connect((err) => {
   if (err) {
-    console.error('❌ Erreur de connexion à la base de données:', err);
-    process.exit(1);
+    console.error('❌ Erreur de connexion à la base de données MySQL:');
+    console.error(err.message || err);
+  } else {
+    console.log('✅ Connecté à la base de données MySQL');
   }
-  console.log('✅ Connecté à la base de données MySQL');
 });
 
 
