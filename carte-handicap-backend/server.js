@@ -23,9 +23,16 @@ app.use('/uploads', express.static('uploads'));
 // ✅ Database Connection (Railway + Local Compatible)
 let connectionUri =
   process.env.MYSQL_URL ||
-  process.env.MYSQL_INTERNAL_URL ||
+  process.env.MYSQL_PUBLIC_URL ||
   process.env.DATABASE_URL ||
-  process.env.MYSQL_PUBLIC_URL;
+  process.env.MYSQL_INTERNAL_URL;
+
+if (process.env.RAILWAY_ENVIRONMENT_NAME && connectionUri.includes('mysql.railway.internal')) {
+  // Switch to proxy if internal DB isn't reachable
+  console.log('⚠️ Switching to public proxy (internal DB not accessible)');
+  connectionUri = 'mysql://root:LyPSnPgwtmLuUVIYzskqChmOTKZTYSmn@crossover.proxy.rlwy.net:33162/railway';
+}
+
 
 if (!connectionUri) {
   console.log('⚠️ No single URI found, falling back to manual connection settings');
