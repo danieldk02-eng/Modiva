@@ -6,223 +6,115 @@
   <title>Modiva – Carte Canadienne du Handicap</title>
 
   <style>
-    :root {
-      --blue: #00205b;
-      --blue-light: #e6eef9;
-      --green: #28a745;
-      --grey: #6c757d;
-      --text: #1f2d3d;
-      --bg: #f8fafc;
-      --radius: 12px;
-      --shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    :root{
+      --blue:#00205b; --blue-900:#001944; --green:#28a745;
+      --text:#1f2d3d; --bg:#f6f8fb; --radius:12px;
+      --shadow:0 6px 20px rgba(0,0,0,.07);
     }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.55;}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      color: var(--text);
-      line-height: 1.6;
+    /* ===== Header ===== */
+    header{background:#fff; border-bottom:1px solid #e5e9ee;}
+    .site-header{
+      max-width:1200px; margin:auto; padding:12px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
+    .header-left{display:flex; align-items:center; gap:10px; min-width:0;}
+    .header-left img{height:28px; flex:0 0 auto;}
+    .gc-text{font-weight:600; color:#111; white-space:nowrap;}
+    .header-right{display:flex; align-items:center; gap:10px; margin-left:auto;}
+    .header-btn{
+      text-decoration:none; color:#fff; background:var(--blue);
+      padding:9px 14px; border-radius:8px; font-weight:700; font-size:14px;
+      transition:transform .15s ease, opacity .15s ease;
+    }
+    .header-btn.secondary{background:var(--green);}
+    .header-btn:hover{transform:translateY(-1px); opacity:.95;}
 
-    /* Header bar like canada.ca */
-    header {
-      background-color: white;
-      border-bottom: 1px solid #dfe3e6;
+    /* ===== Hero ===== */
+    .hero{
+      background:url("home_banner.jpg") center/cover no-repeat, var(--blue-900);
+      min-height:280px; display:flex; align-items:center; justify-content:center;
+      position:relative; text-align:center; color:#fff;
     }
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: auto;
-      padding: 15px 20px;
-    }
-    .header-top img {
-      height: 28px;
-    }
+    .hero::after{content:""; position:absolute; inset:0; background:rgba(0,32,91,.45);}
+    .hero-content{position:relative; z-index:1; padding:0 16px;}
+    .hero h1{margin:0 0 8px; font-size:40px; letter-spacing:.2px;}
+    .hero p{margin:0; font-size:18px; opacity:.95;}
 
-    .header-buttons {
-      display: flex;
-      gap: 10px;
+    /* ===== Main ===== */
+    .container{max-width:1100px; margin:32px auto 48px; padding:0 20px;}
+    .intro{
+      background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:22px; text-align:center; margin-bottom:28px;
     }
+    .intro strong{color:var(--blue); font-size:18px;}
 
-    .header-buttons a {
-      background: var(--blue);
-      color: white;
-      padding: 8px 16px;
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 15px;
-      transition: background 0.2s;
+    .btns{
+      display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:20px 0 36px;
     }
-    .header-buttons a.signup {
-      background: var(--green);
+    .btn{
+      text-decoration:none; color:#fff; background:var(--blue);
+      padding:12px 22px; border-radius:10px; font-weight:700; font-size:16px;
+      box-shadow:var(--shadow); transition:transform .15s ease, opacity .15s ease;
     }
-    .header-buttons a:hover {
-      background: #00338d;
-    }
-    .header-buttons a.signup:hover {
-      background: #23923d;
-    }
+    .btn.secondary{background:var(--green);}
+    .btn:hover{transform:translateY(-2px); opacity:.95;}
 
-    /* Hero image area */
-    .hero {
-      background: url("home_banner.jpg") center/cover no-repeat;
-      height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      color: white;
+    .features{
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+      gap:18px;
     }
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 32, 91, 0.45);
+    .card{
+      background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
+      overflow:hidden; text-align:center; transition:transform .2s, box-shadow .2s;
     }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-    .hero-content h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-    .hero-content p {
-      font-size: 20px;
-    }
+    .card:hover{transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.12);}
+    .card img{width:100%; height:160px; object-fit:cover; background:#e6eef9;}
+    .card h3{color:var(--blue); font-size:18px; margin:14px 0 6px;}
+    .card p{color:#555; margin:0; padding:0 16px 16px; font-size:15px;}
+    .card a{display:inline-block; margin:0 0 16px; color:var(--blue); font-weight:600; text-decoration:none;}
+    .card a:hover{text-decoration:underline;}
 
-    /* Main container */
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+    footer{background:var(--blue); color:#fff; text-align:center; padding:20px; font-size:14px;}
+    footer a{color:#aad3ff; text-decoration:none;} footer a:hover{text-decoration:underline;}
 
-    .intro {
-      background: white;
-      border-radius: var(--radius);
-      padding: 25px;
-      box-shadow: var(--shadow);
-      text-align: center;
-      margin-bottom: 40px;
+    /* ===== Mobile tweaks ===== */
+    @media (max-width:700px){
+      .site-header{padding:10px 14px;}
+      .gc-text{font-size:14px;}
+      .header-btn{padding:8px 12px; font-size:13px;}
+      .hero{min-height:220px;}
+      .hero h1{font-size:28px;}
+      .hero p{font-size:15px;}
+      .btn{width:100%; text-align:center;}
+      .card img{height:140px;}
     }
-
-    .intro strong {
-      color: var(--blue);
-      font-size: 20px;
-    }
-
-    /* Buttons */
-    .btns {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
-
-    .btn {
-      text-decoration: none;
-      color: white;
-      font-weight: 600;
-      padding: 14px 30px;
-      border-radius: 8px;
-      transition: all 0.2s;
-      font-size: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .btn-primary {
-      background: var(--blue);
-    }
-    .btn-secondary {
-      background: var(--green);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      opacity: 0.95;
-    }
-
-    /* Features */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      margin-bottom: 60px;
-    }
-
-    .card {
-      background: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      text-align: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background: var(--blue-light);
-    }
-    .card h3 {
-      color: var(--blue);
-      font-size: 20px;
-      margin: 15px 0 8px;
-    }
-    .card p {
-      color: #555;
-      padding: 0 20px 20px;
-      font-size: 16px;
-    }
-    .card a {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--blue);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .card a:hover {
-      text-decoration: underline;
-    }
-
-    /* Footer */
-    footer {
-      background: var(--blue);
-      color: white;
-      padding: 25px;
-      text-align: center;
-      font-size: 15px;
-    }
-
-    @media (max-width: 700px) {
-      .hero-content h1 { font-size: 32px; }
-      .hero-content p { font-size: 16px; }
-      .header-buttons { flex-direction: column; }
+    @media (max-width:420px){
+      .gc-text{display:none;} /* keep logo visible, hide long text on very small screens */
+      .header-right{gap:8px;}
+      .header-btn{padding:8px 10px; border-radius:7px;}
     }
   </style>
 </head>
 
 <body>
+  <!-- Header -->
   <header>
-    <div class="header-top">
-      <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-fr.svg" alt="Gouvernement du Canada">
-      <div class="header-buttons">
-        <a href="page_connexion.html">Se connecter</a>
-        <a href="page_inscription.html" class="signup">S’inscrire</a>
+    <div class="site-header">
+      <div class="header-left">
+        <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-fr.svg" alt="Gouvernement du Canada">
+        <span class="gc-text">Gouvernement du Canada</span>
+      </div>
+      <div class="header-right">
+        <a href="page_connexion.html" class="header-btn">Se connecter</a>
+        <a href="page_inscription.html" class="header-btn secondary">S’inscrire</a>
       </div>
     </div>
   </header>
 
+  <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
       <h1>Modiva</h1>
@@ -230,6 +122,7 @@
     </div>
   </section>
 
+  <!-- Main -->
   <main class="container">
     <div class="intro">
       <strong>Bienvenue sur Modiva</strong><br><br>
@@ -237,27 +130,27 @@
     </div>
 
     <div class="btns">
-      <a href="page_connexion.html" class="btn btn-primary">Se connecter</a>
-      <a href="page_inscription.html" class="btn btn-secondary">S’inscrire</a>
+      <a href="page_connexion.html" class="btn">Se connecter</a>
+      <a href="page_inscription.html" class="btn secondary">S’inscrire</a>
     </div>
 
     <div class="features">
       <div class="card">
-        <img src="utilisateur.jpg" alt="Utilisateur" />
+        <img src="utilisateur.jpg" alt="Espace utilisateur">
         <h3>Pour les utilisateurs</h3>
         <p>Gérez vos informations, vos demandes et vos documents liés à votre carte canadienne du handicap.</p>
         <a href="page_connexion.html">Accéder à mon compte →</a>
       </div>
 
       <div class="card">
-        <img src="employers.jpg" alt="Employés" />
+        <img src="employers.jpg" alt="Vérification employé">
         <h3>Pour les employés</h3>
         <p>Vérifiez rapidement l’admissibilité d’un usager à l’aide de sa carte NFC.</p>
         <a href="page_verification_accommodements.html">Vérifier une carte →</a>
       </div>
 
       <div class="card">
-        <img src="admin.jpg" alt="Administration" />
+        <img src="admin.jpg" alt="Espace administrateur">
         <h3>Pour l’administration</h3>
         <p>Gérez les validations, les demandes et les rapports à travers l’interface sécurisée.</p>
         <a href="page_admin_validation.html">Espace administrateur →</a>
@@ -265,9 +158,9 @@
     </div>
   </main>
 
-  <footer>git s
+  <footer>
     © Gouvernement du Canada – Projet Modiva<br>
-    <small>Inspiré du design officiel de <a href="https://www.canada.ca/fr.html" style="color:#aad3ff;text-decoration:none;">Canada.ca</a></small>
+    <small>Inspiré du design officiel de <a href="https://www.canada.ca/fr.html">Canada.ca</a></small>
   </footer>
 </body>
 </html>
