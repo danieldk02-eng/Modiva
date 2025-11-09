@@ -139,39 +139,17 @@ app.post("/approve-user", (req, res) => {
 app.post("/scan", (req, res) => {
   const { uid } = req.body;
 
-  if (!uid) {
-    return res.status(400).json({ access: "DENIED", message: "UID manquant" });
-  }
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
 
-  const query = "SELECT name, disability_category, approved FROM users WHERE uid = ?";
-  db.query(query, [uid], (err, results) => {
-    if (err) {
-      console.error("Erreur lors de la vérification de l'UID:", err);
-      return res.status(500).json({ access: "DENIED", error: "Erreur serveur" });
-    }
-
-    if (results.length > 0 && results[0].approved) {
-      const user = results[0];
-      res.json({
-        access: "GRANTED",
-        name: user.name,
-        disability_category: user.disability_category,
-      });
-    } else {
-      res.json({ access: "DENIED", name: "Inconnu" });
-    }
-  });
-});
-
-// Health check (Railway)
-app.get("/health", (req, res) => {
-  db.ping((err) => {
-    if (err) return res.status(500).json({ status: "Database unreachable" });
-    res.json({ status: "OK" });
-  });
+        res.json(results);
+    });
 });
 
 // ---------------- Start Server ----------------
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
+    console.log(`Serveur démarré sur le port ${PORT}`);
 });
