@@ -3,14 +3,14 @@ CREATE DATABASE IF NOT EXISTS carte_handicap_canada;
 USE carte_handicap_canada;
 
 -- Table des types de handicap
-CREATE TABLE handicap_types (
+CREATE TABLE IF NOT EXISTS handicap_types (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(100) NOT NULL,
     description TEXT
 );
 
 -- Table des services et accommodements
-CREATE TABLE accommodation_info (
+CREATE TABLE IF NOT EXISTS accommodation_info (
     accommodation_id INT PRIMARY KEY AUTO_INCREMENT,
     service_name VARCHAR(200) NOT NULL,
     service_description TEXT,
@@ -18,7 +18,7 @@ CREATE TABLE accommodation_info (
 );
 
 -- Table de liaison entre handicaps et services
-CREATE TABLE handicap_services (
+CREATE TABLE IF NOT EXISTS handicap_services (
     id INT PRIMARY KEY AUTO_INCREMENT,
     handicap_type_id INT,
     accommodation_id INT,
@@ -27,7 +27,7 @@ CREATE TABLE handicap_services (
 );
 
 -- Table des utilisateurs
-CREATE TABLE user_info (
+CREATE TABLE IF NOT EXISTS user_info (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE user_info (
 );
 
 -- Table de liaison utilisateur-handicap
-CREATE TABLE user_handicaps (
+CREATE TABLE IF NOT EXISTS user_handicaps (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     handicap_type_id INT,
@@ -51,7 +51,7 @@ CREATE TABLE user_handicaps (
 );
 
 -- Table de liaison utilisateur-services
-CREATE TABLE user_accommodation_link (
+CREATE TABLE IF NOT EXISTS user_accommodation_link (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     accommodation_id INT,
@@ -60,7 +60,7 @@ CREATE TABLE user_accommodation_link (
 );
 
 -- Table de validation
-CREATE TABLE page_validation (
+CREATE TABLE IF NOT EXISTS page_validation (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     statut_validation ENUM('en_attente', 'approuve', 'rejete') DEFAULT 'en_attente',
@@ -68,6 +68,33 @@ CREATE TABLE page_validation (
     date_validation DATETIME,
     commentaires TEXT,
     FOREIGN KEY (user_id) REFERENCES user_info(user_id)
+);
+
+-- Table des lieux gouvernementaux par province
+CREATE TABLE IF NOT EXISTS government_locations (
+    location_id INT PRIMARY KEY AUTO_INCREMENT,
+    province VARCHAR(50) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    location_name VARCHAR(200) NOT NULL,
+    address VARCHAR(300) NOT NULL,
+    phone_number VARCHAR(20),
+    postal_code VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des rendez-vous
+CREATE TABLE IF NOT EXISTS card_appointments (
+    appointment_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    location_id INT NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    status ENUM('confirme', 'annule', 'complete') DEFAULT 'confirme',
+    appointment_type ENUM('nouvelle_carte', 'remplacement') NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (location_id) REFERENCES government_locations(location_id)
 );
 
 -- Insertion des types de handicap
@@ -158,7 +185,7 @@ INSERT INTO accommodation_info (service_name, service_description, province) VAL
 ('Équipement adaptatif', 'Aide pour dispositifs facilitant les mouvements', 'Toutes les provinces'),
 ('Aménagement poste de travail', 'Adaptation ergonomique de l\'espace de travail', 'Toutes les provinces');
 
--- Liaison handicaps et services (exemples)
+-- Liaison handicaps et services
 -- Mobilité
 INSERT INTO handicap_services (handicap_type_id, accommodation_id) VALUES
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6);
@@ -198,3 +225,53 @@ INSERT INTO handicap_services (handicap_type_id, accommodation_id) VALUES
 -- Flexibilité
 INSERT INTO handicap_services (handicap_type_id, accommodation_id) VALUES
 (3, 43), (3, 44), (3, 45);
+
+-- Insérer des exemples de lieux gouvernementaux
+INSERT INTO government_locations (province, city, location_name, address, phone_number, postal_code) VALUES
+-- Québec - SAAQ
+('Québec', 'Montréal', 'SAAQ - Centre-ville Montréal', '855 Boulevard Henri-Bourassa Ouest', '514-873-7620', 'H3C 5J9'),
+('Québec', 'Montréal', 'SAAQ - Montréal-Nord', '4242 Rue de Charleroi', '514-873-7620', 'H1H 5J8'),
+('Québec', 'Québec', 'SAAQ - Québec Centre', '2550 Boulevard Laurier', '418-643-7620', 'G1V 4M6'),
+('Québec', 'Laval', 'SAAQ - Laval', '1515 Boulevard Chomedey', '450-686-7620', 'H7V 3Z2'),
+('Québec', 'Gatineau', 'SAAQ - Gatineau', '456 Boulevard Maloney Est', '819-643-7620', 'J8P 1E6'),
+
+-- Ontario - ServiceOntario
+('Ontario', 'Toronto', 'ServiceOntario - Downtown Toronto', '777 Bay Street', '416-326-1234', 'M5G 2E5'),
+('Ontario', 'Toronto', 'ServiceOntario - North York', '5650 Yonge Street', '416-326-1234', 'M2M 4G3'),
+('Ontario', 'Ottawa', 'ServiceOntario - Ottawa Centre', '110 Laurier Avenue West', '613-326-1234', 'K1P 1J1'),
+('Ontario', 'Mississauga', 'ServiceOntario - Mississauga', '3024 Hurontario Street', '905-326-1234', 'L5B 3B9'),
+('Ontario', 'Hamilton', 'ServiceOntario - Hamilton', '119 King Street West', '905-326-1234', 'L8P 4Y7'),
+
+-- Colombie-Britannique - ICBC
+('Colombie-Britannique', 'Vancouver', 'ICBC - Downtown Vancouver', '1055 West Georgia Street', '604-661-2800', 'V6E 3P3'),
+('Colombie-Britannique', 'Vancouver', 'ICBC - East Vancouver', '4680 Kingsway', '604-661-2800', 'V5H 4L9'),
+('Colombie-Britannique', 'Victoria', 'ICBC - Victoria', '3995 Quadra Street', '250-978-8300', 'V8X 1J8'),
+('Colombie-Britannique', 'Surrey', 'ICBC - Surrey', '6456 King George Boulevard', '604-661-2800', 'V3X 1E8'),
+
+-- Alberta - Registry Services
+('Alberta', 'Calgary', 'Alberta Registry - Calgary Centre', '801 6 Avenue SW', '403-427-2711', 'T2P 3W2'),
+('Alberta', 'Calgary', 'Alberta Registry - Calgary North', '4014 Macleod Trail SE', '403-427-2711', 'T2G 2R7'),
+('Alberta', 'Edmonton', 'Alberta Registry - Edmonton Downtown', '10155 102 Street NW', '780-427-2711', 'T5J 4G8'),
+('Alberta', 'Edmonton', 'Alberta Registry - Edmonton South', '3803 Calgary Trail NW', '780-427-2711', 'T6J 5M8'),
+
+-- Manitoba - Service Manitoba
+('Manitoba', 'Winnipeg', 'Service Manitoba - Downtown', '1395 Ellice Avenue', '204-945-3744', 'R3G 3P2'),
+('Manitoba', 'Winnipeg', 'Service Manitoba - St. Vital', '830 Dakota Street', '204-945-3744', 'R2M 5M3'),
+
+-- Saskatchewan - SGI
+('Saskatchewan', 'Regina', 'SGI - Regina Centre', '2260 11th Avenue', '306-751-1200', 'S4P 0J9'),
+('Saskatchewan', 'Saskatoon', 'SGI - Saskatoon Downtown', '1134 2nd Avenue North', '306-751-1200', 'S7K 2E2'),
+
+-- Nouveau-Brunswick - Service NB
+('Nouveau-Brunswick', 'Moncton', 'Service NB - Moncton', '655 Main Street', '506-684-7901', 'E1C 1E8'),
+('Nouveau-Brunswick', 'Fredericton', 'Service NB - Fredericton', '435 King Street', '506-453-2527', 'E3B 5H8'),
+
+-- Nouvelle-Écosse - Access Nova Scotia
+('Nouvelle-Écosse', 'Halifax', 'Access Nova Scotia - Halifax', '1505 Barrington Street', '902-424-5200', 'B3J 3K5'),
+('Nouvelle-Écosse', 'Dartmouth', 'Access Nova Scotia - Dartmouth', '277 Pleasant Street', '902-424-5200', 'B2Y 3S4'),
+
+-- Île-du-Prince-Édouard - Access PEI
+('Île-du-Prince-Édouard', 'Charlottetown', 'Access PEI - Charlottetown', '161 St Peters Road', '902-368-5200', 'C1A 5P7'),
+
+-- Terre-Neuve-et-Labrador - Service NL
+('Terre-Neuve-et-Labrador', 'St. Johns', 'Service NL - St. Johns', '10 Mews Place', '709-729-2300', 'A1B 4J6');

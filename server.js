@@ -1,4 +1,4 @@
-// server.js - Backend Node.js pour Carte Canadienne du Handicap
+
 const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
@@ -9,10 +9,8 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
-// Après les autres app.use
 
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +33,7 @@ db.connect((err) => {
     console.log('Connecté à la base de données MySQL');
 });
 
-// Configuration de multer pour upload de fichiers
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const dir = './uploads/documents';
@@ -52,7 +50,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    limits: { fileSize: 5 * 1024 * 1024 }, 
     fileFilter: (req, file, cb) => {
         const allowedTypes = /pdf|jpg|jpeg|png/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -66,14 +64,14 @@ const upload = multer({
     }
 });
 
-// Fonction pour générer un numéro de compte unique
+
 function generateAccountNumber() {
     return 'ACC' + Date.now().toString().slice(-9);
 }
 
-// ============ ROUTES API ============
 
-// 1. INSCRIPTION
+
+
 app.post('/api/inscription', upload.single('proofDocument'), async (req, res) => {
     try {
         const { prenom, nom, email, adresse, password, handicapTypes } = req.body;
@@ -87,7 +85,7 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
             return res.status(400).json({ message: 'Document médical requis' });
         }
 
-        // Vérifier si l'email existe déjà
+        
         const checkEmail = 'SELECT * FROM user_info WHERE email = ?';
         db.query(checkEmail, [email], async (err, results) => {
             if (err) {
@@ -99,13 +97,12 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
                 return res.status(400).json({ message: 'Cet email est déjà utilisé' });
             }
 
-            // Hasher le mot de passe
             const hashedPassword = await bcrypt.hash(password, 10);
             
-            // Générer numéro de compte
+            
             const numeroCompte = generateAccountNumber();
 
-            // Insérer l'utilisateur
+            
             const insertUser = `
                 INSERT INTO user_info 
                 (email, password, first_name, last_name, address, numero_de_compte, proof_document, statut_validation) 
@@ -143,7 +140,6 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
                             return res.status(500).json({ message: 'Erreur lors de l\'ajout des handicaps' });
                         }
 
-                        // Créer entrée de validation
                         const insertValidation = 'INSERT INTO page_validation (user_id, statut_validation) VALUES (?, "en_attente")';
                         db.query(insertValidation, [userId], (err) => {
                             if (err) console.error(err);
@@ -164,7 +160,7 @@ app.post('/api/inscription', upload.single('proofDocument'), async (req, res) =>
     }
 });
 
-// 2. CONNEXION
+
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
 
@@ -185,13 +181,13 @@ app.post('/api/login', (req, res) => {
 
         const user = results[0];
 
-        // Vérifier le mot de passe
+       
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
         }
 
-        // Vérifier le statut de validation
+        
         if (user.statut_validation === 'en_attente') {
             return res.status(403).json({ 
                 message: 'Votre compte est en attente de validation',
@@ -215,14 +211,13 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// 3. VALIDER UN UTILISATEUR (Admin)
 app.post('/api/validation/valider/:userId', (req, res) => {
     const userId = req.params.userId;
-    const { approuve } = req.body; // true ou false
+    const { approuve } = req.body; 
 
     const statut = approuve ? 'valide' : 'rejete';
 
-    // Mettre à jour le statut
+    
     const updateUser = 'UPDATE user_info SET statut_validation = ? WHERE user_id = ?';
     db.query(updateUser, [statut, userId], (err) => {
         if (err) {
@@ -236,7 +231,7 @@ app.post('/api/validation/valider/:userId', (req, res) => {
         });
 
         if (approuve) {
-            // Assigner les services basés sur les types de handicap
+           
             assignServicesToUser(userId);
         }
 
@@ -244,9 +239,9 @@ app.post('/api/validation/valider/:userId', (req, res) => {
     });
 });
 
-// Fonction pour assigner les services
+
 function assignServicesToUser(userId) {
-    // Récupérer les types de handicap de l'utilisateur
+    
     const getHandicaps = 'SELECT handicap_type_id FROM user_handicaps WHERE user_id = ?';
     
     db.query(getHandicaps, [userId], (err, handicaps) => {
@@ -255,7 +250,7 @@ function assignServicesToUser(userId) {
             return;
         }
 
-        // Pour chaque type de handicap, récupérer les services associés
+       
         handicaps.forEach(h => {
             const getServices = 'SELECT accommodation_id FROM handicap_services WHERE handicap_type_id = ?';
             
@@ -325,7 +320,7 @@ app.get('/api/user/:userId/services', (req, res) => {
     });
 });
 
-// 6. VÉRIFIER ACCOMMODEMENTS PAR NUMÉRO DE COMPTE (pour employés)
+
 app.get('/api/verify/:numeroCompte', (req, res) => {
     const numeroCompte = req.params.numeroCompte;
 
@@ -351,7 +346,7 @@ app.get('/api/verify/:numeroCompte', (req, res) => {
             return res.status(403).json({ message: 'Compte non validé' });
         }
 
-        // Récupérer les services
+        
         const servicesQuery = `
             SELECT DISTINCT a.service_name, a.service_description, a.province
             FROM user_info u
@@ -379,7 +374,7 @@ app.get('/api/verify/:numeroCompte', (req, res) => {
     });
 });
 
-// 7. LISTE DES UTILISATEURS EN ATTENTE (Admin)
+
 app.get('/api/admin/pending-users', (req, res) => {
     const query = `
         SELECT u.user_id, u.first_name, u.last_name, u.email, u.date_creation, u.proof_document
@@ -398,7 +393,166 @@ app.get('/api/admin/pending-users', (req, res) => {
     });
 });
 
-// Démarrer le serveur
+
+app.get('/api/locations/:province/:city', (req, res) => {
+    const { province, city } = req.params;
+    
+    console.log('Recherche lieux - Province:', province, 'Ville:', city);
+    
+    const query = `
+        SELECT location_id, location_name, address, phone_number, postal_code, city
+        FROM government_locations
+        WHERE province = ? AND city LIKE ?
+        ORDER BY location_name
+    `;
+    
+    db.query(query, [province, '%' + city + '%'], (err, results) => {
+        if (err) {
+            console.error('Erreur SQL locations:', err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+        console.log('Lieux trouvés:', results.length);
+        res.json(results);
+    });
+});
+
+
+app.get('/api/cities/:province', (req, res) => {
+    const province = req.params.province;
+    
+    console.log('Recherche villes pour province:', province);
+    
+    const query = `
+        SELECT DISTINCT city
+        FROM government_locations
+        WHERE province = ?
+        ORDER BY city
+    `;
+    
+    db.query(query, [province], (err, results) => {
+        if (err) {
+            console.error('Erreur SQL cities:', err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+        console.log('Villes trouvées:', results.length);
+        const cities = results.map(r => r.city);
+        res.json(cities);
+    });
+});
+
+
+app.post('/api/appointments', (req, res) => {
+    const { userId, locationId, appointmentDate, appointmentTime, appointmentType, notes } = req.body;
+    
+    console.log('Création rendez-vous:', req.body);
+    
+    if (!userId || !locationId || !appointmentDate || !appointmentTime || !appointmentType) {
+        return res.status(400).json({ message: 'Tous les champs requis sont manquants' });
+    }
+    
+    
+    const checkQuery = `
+        SELECT * FROM card_appointments 
+        WHERE user_id = ? AND status = 'confirme'
+    `;
+    
+    db.query(checkQuery, [userId], (err, results) => {
+        if (err) {
+            console.error('Erreur vérification RDV:', err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+        
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'Vous avez déjà un rendez-vous actif' });
+        }
+        
+        const insertQuery = `
+            INSERT INTO card_appointments 
+            (user_id, location_id, appointment_date, appointment_time, appointment_type, notes)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        
+        db.query(insertQuery, [userId, locationId, appointmentDate, appointmentTime, appointmentType, notes || ''], 
+            (err, result) => {
+                if (err) {
+                    console.error('Erreur insertion RDV:', err);
+                    return res.status(500).json({ message: 'Erreur lors de la création du rendez-vous' });
+                }
+                
+                console.log('Rendez-vous créé avec ID:', result.insertId);
+                res.status(201).json({
+                    message: 'Rendez-vous créé avec succès',
+                    appointmentId: result.insertId
+                });
+            }
+        );
+    });
+});
+
+
+app.get('/api/user/:userId/appointments', (req, res) => {
+    const userId = req.params.userId;
+    
+    console.log('Récupération RDV pour user:', userId);
+    
+    const query = `
+        SELECT 
+            ca.appointment_id,
+            ca.appointment_date,
+            ca.appointment_time,
+            ca.status,
+            ca.appointment_type,
+            ca.notes,
+            gl.location_name,
+            gl.address,
+            gl.phone_number,
+            gl.city,
+            gl.province
+        FROM card_appointments ca
+        JOIN government_locations gl ON ca.location_id = gl.location_id
+        WHERE ca.user_id = ?
+        ORDER BY ca.appointment_date DESC, ca.appointment_time DESC
+    `;
+    
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Erreur récupération RDV:', err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+        console.log('RDV trouvés:', results.length);
+        res.json(results);
+    });
+});
+
+
+app.put('/api/appointments/:appointmentId/cancel', (req, res) => {
+    const appointmentId = req.params.appointmentId;
+    
+    console.log('Annulation RDV:', appointmentId);
+    
+    const query = `
+        UPDATE card_appointments 
+        SET status = 'annule'
+        WHERE appointment_id = ? AND status = 'confirme'
+    `;
+    
+    db.query(query, [appointmentId], (err, result) => {
+        if (err) {
+            console.error('Erreur annulation RDV:', err);
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Rendez-vous non trouvé ou déjà annulé' });
+        }
+        
+        console.log('RDV annulé avec succès');
+        res.json({ message: 'Rendez-vous annulé avec succès' });
+    });
+});
+
+
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log(`API disponible sur http://localhost:${PORT}`);
 });

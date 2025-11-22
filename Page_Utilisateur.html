@@ -10,7 +10,177 @@
       background-color: #f8f9fa;
       margin: 0;
       padding: 0;
+      transition: all 0.3s ease;
     }
+    
+    /* Mode Dyslexie */
+    body.dyslexia-mode {
+      font-family: 'Comic Sans MS', 'OpenDyslexic', Arial, sans-serif;
+      letter-spacing: 0.12em;
+      word-spacing: 0.16em;
+      line-height: 2;
+    }
+    
+    /* Mode Contraste Élevé */
+    body.high-contrast {
+      background-color: #000 !important;
+      color: #fff !important;
+    }
+    body.high-contrast .container,
+    body.high-contrast .modal-content,
+    body.high-contrast .appointment-section {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #fff !important;
+    }
+    body.high-contrast .services li,
+    body.high-contrast .appointment-card,
+    body.high-contrast .location-card {
+      background-color: #1a1a1a !important;
+      color: #fff !important;
+      border: 2px solid #fff !important;
+    }
+    body.high-contrast h2,
+    body.high-contrast .info strong,
+    body.high-contrast label {
+      color: #ffff00 !important;
+    }
+    
+    /* Panneau d'accessibilité */
+    .accessibility-panel {
+      position: fixed;
+      top: 80px;
+      right: -320px;
+      width: 300px;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 2000;
+      transition: right 0.3s ease;
+      border-radius: 10px 0 0 10px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .accessibility-panel.open {
+      right: 0;
+    }
+    
+    .accessibility-toggle {
+      position: fixed;
+      top: 80px;
+      right: 0;
+      background: #00205b;
+      color: white;
+      padding: 15px 10px;
+      cursor: pointer;
+      z-index: 2001;
+      border-radius: 10px 0 0 10px;
+      font-size: 24px;
+      box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .accessibility-toggle:hover {
+      background: #003380;
+      transform: translateX(-5px);
+    }
+    
+    .accessibility-panel h3 {
+      color: #00205b;
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 2px solid #00205b;
+      padding-bottom: 10px;
+    }
+    
+    .accessibility-option {
+      margin: 15px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #f8f9fa;
+    }
+    
+    .accessibility-option label {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      cursor: pointer;
+      color: #00205b;
+    }
+    
+    .accessibility-option input[type="checkbox"],
+    .accessibility-option input[type="range"] {
+      margin-right: 10px;
+    }
+    
+    .accessibility-option input[type="range"] {
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .text-size-display {
+      text-align: center;
+      font-weight: bold;
+      color: #00205b;
+      margin-top: 5px;
+    }
+    
+    .tts-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .tts-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .tts-btn.play {
+      background: #28a745;
+      color: white;
+    }
+    
+    .tts-btn.pause {
+      background: #ffc107;
+      color: #000;
+    }
+    
+    .tts-btn.stop {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .tts-btn:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+    
+    .tts-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Animation pour focus clavier */
+    *:focus {
+      outline: 3px solid #ffc107 !important;
+      outline-offset: 2px !important;
+    }
+    
+    /* Indication de lecture vocale active */
+    .reading-highlight {
+      background-color: #ffeb3b !important;
+      border: 2px solid #ffc107 !important;
+      transition: all 0.3s ease;
+    }
+    
     header {
       background-color: #00205b; 
       color: white;
@@ -138,18 +308,307 @@
       display: inline-block;
       margin-left: 10px;
     }
+    
+    /* Styles pour la section rendez-vous */
+    .appointment-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin: 30px 0;
+      border: 2px solid #e0e0e0;
+    }
+    .btn-primary {
+      background-color: #00205b;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      margin: 8px 5px;
+      transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+      background-color: #003380;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      overflow-y: auto;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 3% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 20px;
+    }
+    .close:hover {
+      color: #000;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #00205b;
+      font-size: 15px;
+    }
+    .form-group select,
+    .form-group input[type="date"],
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .location-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .location-card:hover {
+      border-color: #00205b;
+      box-shadow: 0 2px 8px rgba(0,32,91,0.1);
+    }
+    .location-card.selected {
+      border-color: #00205b;
+      background-color: #e6f2ff;
+    }
+    .location-name {
+      font-weight: bold;
+      color: #00205b;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .location-details {
+      font-size: 14px;
+      color: #666;
+    }
+    .location-details p {
+      margin: 5px 0;
+    }
+    .appointment-card {
+      background: white;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .appointment-card.cancelled {
+      border-left-color: #dc3545;
+      opacity: 0.7;
+    }
+    .appointment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .appointment-date {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00205b;
+    }
+    .appointment-status {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .status-confirme {
+      background-color: #28a745;
+      color: white;
+    }
+    .status-annule {
+      background-color: #dc3545;
+      color: white;
+    }
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .time-slot {
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    .time-slot:hover {
+      border-color: #00205b;
+      background-color: #f8f9fa;
+    }
+    .time-slot.selected {
+      background-color: #00205b;
+      color: white;
+      border-color: #00205b;
+    }
+    
+    /* Skip to content link pour accessibilité clavier */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #00205b;
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 100;
+    }
+    .skip-to-content:focus {
+      top: 0;
+    }
   </style>
 </head>
 
 <body>
-  <header>Carte Canadienne du Handicap – Espace Utilisateur</header>
-  <div class="container">
-    <div id="loadingDiv" class="loading">
+  <!-- Lien d'accessibilité pour navigation clavier -->
+  <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
+  
+  <!-- Bouton d'accessibilité flottant -->
+  <div class="accessibility-toggle" onclick="toggleAccessibilityPanel()" 
+       role="button" aria-label="Ouvrir le panneau d'accessibilité" tabindex="0">
+    🔊Accessibilités
+  </div>
+  
+  <!-- Panneau d'accessibilité -->
+  <div class="accessibility-panel" id="accessibilityPanel" role="region" aria-label="Options d'accessibilité">
+    <h3> Accessibilité</h3>
+    
+    <!-- Lecteur vocal -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="ttsEnabled" onchange="toggleTTS()">
+         Lecteur vocal
+      </label>
+      <div class="tts-controls" id="ttsControls" style="display: none;">
+        <button class="tts-btn play" onclick="startReading()" aria-label="Lire la page">▶ Lire</button>
+        <button class="tts-btn pause" onclick="pauseReading()" aria-label="Pause">⏸ Pause</button>
+        <button class="tts-btn stop" onclick="stopReading()" aria-label="Arrêter">⏹ Stop</button>
+      </div>
+      <div style="margin-top: 10px;">
+        <label for="speechRate" style="font-size: 13px;">Vitesse de lecture:</label>
+        <input type="range" id="speechRate" min="0.5" max="2" step="0.1" value="1" 
+               oninput="updateSpeechRate(this.value)" aria-label="Vitesse de lecture">
+        <div class="text-size-display" id="rateDisplay">1.0x</div>
+      </div>
+    </div>
+    
+    <!-- Taille du texte -->
+    <div class="accessibility-option">
+      <label for="textSize"> Taille du texte</label>
+      <input type="range" id="textSize" min="12" max="24" value="16" 
+             oninput="changeTextSize(this.value)" aria-label="Ajuster la taille du texte">
+      <div class="text-size-display" id="textSizeDisplay">16px</div>
+    </div>
+    
+    <!-- Mode contraste élevé -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="highContrast" onchange="toggleHighContrast()">
+         Contraste élevé
+      </label>
+    </div>
+    
+    <!-- Mode dyslexie -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="dyslexiaMode" onchange="toggleDyslexiaMode()">
+         Mode de lecture adapté
+      </label>
+    </div>
+    
+    <!-- Espacement du texte -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="textSpacing" onchange="toggleTextSpacing()">
+         Espacement augmenté
+      </label>
+    </div>
+    
+    <!-- Réinitialiser -->
+    <div class="accessibility-option">
+      <button class="btn-secondary" onclick="resetAccessibility()" style="width: 100%;">
+         Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <header role="banner">Carte Canadienne du Handicap – Espace Utilisateur</header>
+  
+  <div class="container" id="main-content" role="main">
+    <div id="loadingDiv" class="loading" role="status" aria-live="polite">
       ⏳ Chargement de vos informations...
     </div>
 
-    <div id="errorDiv" class="error-message" style="display: none;">
-      <p><strong> Erreur de connexion</strong></p>
+    <div id="errorDiv" class="error-message" style="display: none;" role="alert">
+      <p><strong>❌ Erreur de connexion</strong></p>
       <p>Impossible de se connecter au serveur. Assurez-vous que le backend Node.js est démarré sur le port 3000.</p>
       <p><small>Commande: <code>npm start</code></small></p>
     </div>
@@ -166,7 +625,7 @@
 
       <div class="numero-section">
         <h2> Votre Numéro de Compte</h2>
-        <div class="numero-compte-display" id="numeroCompteDisplay">
+        <div class="numero-compte-display" id="numeroCompteDisplay" role="text" aria-label="Numéro de compte">
           —
         </div>
         <p style="font-size: 14px; margin-top: 15px;">
@@ -174,21 +633,112 @@
         </p>
       </div>
 
+      <div class="appointment-section">
+        <h2>🎫 Carte Physique</h2>
+        <p style="margin-bottom: 20px; color: #666;">
+          Prenez rendez-vous dans un lieu gouvernemental de votre province pour obtenir ou renouveler votre carte d'identité physique.
+        </p>
+        
+        <button class="btn-primary" onclick="openAppointmentModal('nouvelle_carte')" aria-label="Prendre rendez-vous pour nouvelle carte">
+           Prendre rendez-vous pour nouvelle carte
+        </button>
+        <button class="btn-primary" onclick="openAppointmentModal('remplacement')" aria-label="Demander un remplacement de carte">
+           Demander un remplacement de carte
+        </button>
+
+        <div id="appointmentsList" style="margin-top: 30px;" role="region" aria-label="Liste des rendez-vous">
+        </div>
+      </div>
+
       <h2>Services et Accommodements Autorisés</h2>
       <div class="services">
-        <ul id="servicesList">
-          <li>Chargement des services…</li>
+        <ul id="servicesList" role="list">
+          <li role="listitem">Chargement des services…</li>
         </ul>
       </div>
 
-      <a href="page_connexion.html" class="logout" onclick="sessionStorage.clear();">
+      <a href="page_connexion.html" class="logout" onclick="sessionStorage.clear();" 
+         role="button" aria-label="Se déconnecter">
         Se Déconnecter
       </a>
     </div>
   </div>
 
+  <!-- Modal pour prendre rendez-vous -->
+  <div id="appointmentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <span class="close" onclick="closeAppointmentModal()" role="button" aria-label="Fermer">&times;</span>
+      <h2 id="modalTitle" style="color: #00205b; margin-top: 0;"> Prendre Rendez-vous</h2>
+      
+      <form id="appointmentForm" onsubmit="submitAppointment(event)">
+        <div class="form-group">
+          <label for="provinceSelect">Province</label>
+          <select id="provinceSelect" required onchange="loadCities()" aria-required="true">
+            <option value="">Sélectionnez une province</option>
+            <option value="Québec">Québec</option>
+            <option value="Ontario">Ontario</option>
+            <option value="Colombie-Britannique">Colombie-Britannique</option>
+            <option value="Alberta">Alberta</option>
+            <option value="Manitoba">Manitoba</option>
+            <option value="Saskatchewan">Saskatchewan</option>
+            <option value="Nouveau-Brunswick">Nouveau-Brunswick</option>
+            <option value="Nouvelle-Écosse">Nouvelle-Écosse</option>
+            <option value="Île-du-Prince-Édouard">Île-du-Prince-Édouard</option>
+            <option value="Terre-Neuve-et-Labrador">Terre-Neuve-et-Labrador</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="citySelect">Ville</label>
+          <select id="citySelect" required onchange="loadLocations()" disabled aria-required="true">
+            <option value="">Sélectionnez d abord une province</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="appointmentDate">Date du rendez-vous</label>
+          <input type="date" id="appointmentDate" required min="" onchange="generateTimeSlots()" aria-required="true">
+        </div>
+
+        <div class="form-group">
+          <label>Heure du rendez-vous</label>
+          <div class="time-slots" id="timeSlots" role="radiogroup" aria-label="Sélectionnez une heure">
+          </div>
+          <input type="hidden" id="selectedTime" required>
+        </div>
+
+        <div class="form-group">
+          <label>Lieu</label>
+          <div id="locationsList" role="radiogroup" aria-label="Sélectionnez un lieu">
+            <p style="color: #666;">Sélectionnez une ville pour voir les lieux disponibles</p>
+          </div>
+          <input type="hidden" id="selectedLocation" required>
+        </div>
+
+        <div class="form-group">
+          <label for="appointmentNotes">Notes (optionnel)</label>
+          <textarea id="appointmentNotes" rows="3" placeholder="Ajoutez des notes concernant votre rendez-vous..." aria-label="Notes optionnelles"></textarea>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+          <button type="submit" class="btn-primary">✅ Confirmer le rendez-vous</button>
+          <button type="button" class="btn-secondary" onclick="closeAppointmentModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     let userId, numeroCompte, userEmail;
+    let selectedLocationId = null;
+    let selectedTime = null;
+    let appointmentType = 'nouvelle_carte';
+    
+    // Variables pour la synthèse vocale
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+    let isReading = false;
+    let speechRate = 1.0;
 
     window.addEventListener('load', function() {
       console.log('Page chargée');
@@ -206,8 +756,214 @@
         return;
       }
       
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('appointmentDate').setAttribute('min', today);
+      
       loadUserData();
+      loadAppointments();
+      loadAccessibilitySettings();
     });
+
+    // ========== FONCTIONS D'ACCESSIBILITÉ ==========
+    
+    function toggleAccessibilityPanel() {
+      const panel = document.getElementById('accessibilityPanel');
+      panel.classList.toggle('open');
+    }
+    
+    function toggleTTS() {
+      const enabled = document.getElementById('ttsEnabled').checked;
+      const controls = document.getElementById('ttsControls');
+      controls.style.display = enabled ? 'flex' : 'none';
+      
+      if (!enabled) {
+        stopReading();
+      }
+      
+      saveAccessibilitySettings();
+    }
+    
+    function startReading() {
+      if (!document.getElementById('ttsEnabled').checked) {
+        alert('Veuillez activer le lecteur vocal d\'abord');
+        return;
+      }
+      
+      stopReading();
+      
+      const content = document.getElementById('contentDiv');
+      if (!content) return;
+      
+      const textElements = content.querySelectorAll('h2, p, li, .service-name, .service-description, button, a');
+      let textToRead = Array.from(textElements)
+        .map(el => el.textContent.trim())
+        .filter(text => text.length > 0)
+        .join('. ');
+      
+      currentUtterance = new SpeechSynthesisUtterance(textToRead);
+      currentUtterance.lang = 'fr-FR';
+      currentUtterance.rate = speechRate;
+      
+      currentUtterance.onstart = () => {
+        isReading = true;
+      };
+      
+      currentUtterance.onend = () => {
+        isReading = false;
+      };
+      
+      speechSynthesis.speak(currentUtterance);
+    }
+    
+    function pauseReading() {
+      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+      } else if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+      }
+    }
+    
+    function stopReading() {
+      speechSynthesis.cancel();
+      isReading = false;
+    }
+    
+    function updateSpeechRate(value) {
+      speechRate = parseFloat(value);
+      document.getElementById('rateDisplay').textContent = value + 'x';
+      
+      if (currentUtterance && isReading) {
+        stopReading();
+        startReading();
+      }
+    }
+    
+    function changeTextSize(size) {
+      document.body.style.fontSize = size + 'px';
+      document.getElementById('textSizeDisplay').textContent = size + 'px';
+      saveAccessibilitySettings();
+    }
+    
+    function toggleHighContrast() {
+      document.body.classList.toggle('high-contrast');
+      saveAccessibilitySettings();
+    }
+    
+    function toggleDyslexiaMode() {
+      document.body.classList.toggle('dyslexia-mode');
+      saveAccessibilitySettings();
+    }
+    
+    function toggleTextSpacing() {
+      const enabled = document.getElementById('textSpacing').checked;
+      if (enabled) {
+        document.body.style.letterSpacing = '0.12em';
+        document.body.style.wordSpacing = '0.16em';
+        document.body.style.lineHeight = '1.8';
+      } else {
+        document.body.style.letterSpacing = '';
+        document.body.style.wordSpacing = '';
+        document.body.style.lineHeight = '';
+      }
+      saveAccessibilitySettings();
+    }
+    
+    function resetAccessibility() {
+      document.getElementById('ttsEnabled').checked = false;
+      document.getElementById('textSize').value = 16;
+      document.getElementById('highContrast').checked = false;
+      document.getElementById('dyslexiaMode').checked = false;
+      document.getElementById('textSpacing').checked = false;
+      
+      document.body.classList.remove('high-contrast', 'dyslexia-mode');
+      document.body.style.fontSize = '';
+      document.body.style.letterSpacing = '';
+      document.body.style.wordSpacing = '';
+      document.body.style.lineHeight = '';
+      
+      document.getElementById('ttsControls').style.display = 'none';
+      document.getElementById('textSizeDisplay').textContent = '16px';
+      
+      stopReading();
+      localStorage.removeItem('accessibilitySettings');
+    }
+    
+    function saveAccessibilitySettings() {
+      const settings = {
+        ttsEnabled: document.getElementById('ttsEnabled').checked,
+        textSize: document.getElementById('textSize').value,
+        highContrast: document.getElementById('highContrast').checked,
+        dyslexiaMode: document.getElementById('dyslexiaMode').checked,
+        textSpacing: document.getElementById('textSpacing').checked,
+        speechRate: speechRate
+      };
+      localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+    }
+    
+    function loadAccessibilitySettings() {
+      const saved = localStorage.getItem('accessibilitySettings');
+      if (!saved) return;
+      
+      try {
+        const settings = JSON.parse(saved);
+        
+        if (settings.ttsEnabled) {
+          document.getElementById('ttsEnabled').checked = true;
+          toggleTTS();
+        }
+        
+        if (settings.textSize) {
+          document.getElementById('textSize').value = settings.textSize;
+          changeTextSize(settings.textSize);
+        }
+        
+        if (settings.highContrast) {
+          document.getElementById('highContrast').checked = true;
+          toggleHighContrast();
+        }
+        
+        if (settings.dyslexiaMode) {
+          document.getElementById('dyslexiaMode').checked = true;
+          toggleDyslexiaMode();
+        }
+        
+        if (settings.textSpacing) {
+          document.getElementById('textSpacing').checked = true;
+          toggleTextSpacing();
+        }
+        
+        if (settings.speechRate) {
+          speechRate = settings.speechRate;
+          document.getElementById('speechRate').value = speechRate;
+          document.getElementById('rateDisplay').textContent = speechRate + 'x';
+        }
+      } catch (e) {
+        console.error('Erreur chargement paramètres accessibilité:', e);
+      }
+    }
+    
+    // Ajouter support clavier pour le panneau d'accessibilité
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('appointmentModal');
+        if (modal.style.display === 'block') {
+          closeAppointmentModal();
+        }
+        
+        const panel = document.getElementById('accessibilityPanel');
+        if (panel.classList.contains('open')) {
+          panel.classList.remove('open');
+        }
+      }
+      
+      // Alt + A pour ouvrir le panneau d'accessibilité
+      if (e.altKey && e.key === 'a') {
+        e.preventDefault();
+        toggleAccessibilityPanel();
+      }
+    });
+
+    // ========== FONCTIONS ORIGINALES ==========
 
     async function loadUserData() {
       console.log('Début chargement données utilisateur...');
@@ -243,10 +999,11 @@
         ul.innerHTML = '';
 
         if (servicesData.length === 0) {
-          ul.innerHTML = '<li>Aucun service disponible pour le moment.</li>';
+          ul.innerHTML = '<li role="listitem">Aucun service disponible pour le moment.</li>';
         } else {
           servicesData.forEach(service => {
             const li = document.createElement('li');
+            li.setAttribute('role', 'listitem');
             li.innerHTML = `
               <div class="service-name">✓ ${service.service_name}</div>
               <div class="service-description">${service.service_description}</div>
@@ -264,6 +1021,307 @@
         console.error('ERREUR complète:', error);
         document.getElementById('loadingDiv').style.display = 'none';
         document.getElementById('errorDiv').style.display = 'block';
+      }
+    }
+
+    async function loadAppointments() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/user/${userId}/appointments`);
+        
+        if (!response.ok) {
+          console.error('Erreur lors du chargement des rendez-vous');
+          return;
+        }
+        
+        const appointments = await response.json();
+        
+        const container = document.getElementById('appointmentsList');
+        
+        if (appointments.length === 0) {
+          container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Aucun rendez-vous programmé</p>';
+          return;
+        }
+        
+        container.innerHTML = '<h3 style="color: #00205b; margin-top: 20px;">📅 Mes Rendez-vous</h3>';
+        
+        appointments.forEach(apt => {
+          const card = document.createElement('div');
+          card.className = 'appointment-card' + (apt.status === 'annule' ? ' cancelled' : '');
+          card.setAttribute('role', 'article');
+          card.setAttribute('aria-label', 'Rendez-vous');
+          
+          const date = new Date(apt.appointment_date).toLocaleDateString('fr-CA');
+          const statusText = apt.status === 'confirme' ? 'Confirmé' : 
+                            apt.status === 'annule' ? 'Annulé' : 'Complété';
+          const typeText = apt.appointment_type === 'nouvelle_carte' ? 'Nouvelle carte' : 'Remplacement';
+          
+          card.innerHTML = `
+            <div class="appointment-header">
+              <div class="appointment-date"> ${date} à ${apt.appointment_time.slice(0,5)}</div>
+              <span class="appointment-status status-${apt.status}">${statusText}</span>
+            </div>
+            <p><strong>Type:</strong> ${typeText}</p>
+            <p><strong>Lieu:</strong> ${apt.location_name}</p>
+            <p><strong>Adresse:</strong> ${apt.address}, ${apt.city}, ${apt.province}</p>
+            <p><strong>Téléphone:</strong> ${apt.phone_number}</p>
+            ${apt.notes ? `<p><strong>Notes:</strong> ${apt.notes}</p>` : ''}
+            ${apt.status === 'confirme' ? 
+              `<button class="btn-danger" style="margin-top: 10px;" onclick="cancelAppointment(${apt.appointment_id})" aria-label="Annuler le rendez-vous">❌ Annuler le rendez-vous</button>` : 
+              ''
+            }
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    }
+
+    function openAppointmentModal(type) {
+      appointmentType = type;
+      const title = type === 'nouvelle_carte' ? 
+        ' Prendre Rendez-vous - Nouvelle Carte' : 
+        ' Prendre Rendez-vous - Remplacement de Carte';
+      
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('appointmentModal').style.display = 'block';
+      
+      document.getElementById('appointmentForm').reset();
+      document.getElementById('locationsList').innerHTML = '<p style="color: #666;">Sélectionnez une ville pour voir les lieux disponibles</p>';
+      document.getElementById('timeSlots').innerHTML = '';
+      document.getElementById('citySelect').disabled = true;
+      document.getElementById('citySelect').innerHTML = '<option value="">Sélectionnez d abord une province</option>';
+      selectedLocationId = null;
+      selectedTime = null;
+    }
+
+    function closeAppointmentModal() {
+      document.getElementById('appointmentModal').style.display = 'none';
+    }
+
+    async function loadCities() {
+      const province = document.getElementById('provinceSelect').value;
+      const citySelect = document.getElementById('citySelect');
+      
+      if (!province) {
+        citySelect.disabled = true;
+        citySelect.innerHTML = '<option value="">Sélectionnez d abord une province</option>';
+        return;
+      }
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/cities/' + encodeURIComponent(province));
+        const cities = await response.json();
+        
+        citySelect.disabled = false;
+        citySelect.innerHTML = '<option value="">Sélectionnez une ville</option>';
+        
+        cities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors du chargement des villes');
+      }
+    }
+
+    async function loadLocations() {
+      const province = document.getElementById('provinceSelect').value;
+      const city = document.getElementById('citySelect').value;
+      const container = document.getElementById('locationsList');
+      
+      if (!province || !city) {
+        container.innerHTML = '<p style="color: #666;">Sélectionnez une ville pour voir les lieux disponibles</p>';
+        return;
+      }
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/locations/' + encodeURIComponent(province) + '/' + encodeURIComponent(city));
+        const locations = await response.json();
+        
+        if (locations.length === 0) {
+          container.innerHTML = '<p style="color: #dc3545;">Aucun lieu disponible dans cette ville</p>';
+          return;
+        }
+        
+        container.innerHTML = '';
+        
+        locations.forEach(loc => {
+          const card = document.createElement('div');
+          card.className = 'location-card';
+          card.setAttribute('role', 'radio');
+          card.setAttribute('aria-checked', 'false');
+          card.setAttribute('tabindex', '0');
+          card.onclick = function() { selectLocation(loc.location_id, card); };
+          card.onkeypress = function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectLocation(loc.location_id, card);
+            }
+          };
+          
+          card.innerHTML = `
+            <div class="location-name">📍 ${loc.location_name}</div>
+            <div class="location-details">
+              <p> ${loc.address}, ${loc.city}</p>
+              <p>📞 ${loc.phone_number}</p>
+              <p>✉️ ${loc.postal_code}</p>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors du chargement des lieux');
+      }
+    }
+
+    function selectLocation(locationId, cardElement) {
+      const allCards = document.querySelectorAll('.location-card');
+      allCards.forEach(card => {
+        card.classList.remove('selected');
+        card.setAttribute('aria-checked', 'false');
+      });
+      
+      cardElement.classList.add('selected');
+      cardElement.setAttribute('aria-checked', 'true');
+      selectedLocationId = locationId;
+      document.getElementById('selectedLocation').value = locationId;
+    }
+
+    function generateTimeSlots() {
+      const container = document.getElementById('timeSlots');
+      container.innerHTML = '';
+      
+      const times = [];
+      for (let hour = 9; hour <= 16; hour++) {
+        const minutes = [0, 30];
+        for (let i = 0; i < minutes.length; i++) {
+          const minute = minutes[i];
+          if (hour === 16 && minute === 30) break;
+          
+          const hourStr = hour.toString().padStart(2, '0');
+          const minuteStr = minute.toString().padStart(2, '0');
+          const timeStr = hourStr + ':' + minuteStr;
+          times.push(timeStr);
+        }
+      }
+      
+      times.forEach(time => {
+        const slot = document.createElement('div');
+        slot.className = 'time-slot';
+        slot.textContent = time;
+        slot.setAttribute('role', 'radio');
+        slot.setAttribute('aria-checked', 'false');
+        slot.setAttribute('tabindex', '0');
+        slot.onclick = function() { selectTimeSlot(time, slot); };
+        slot.onkeypress = function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectTimeSlot(time, slot);
+          }
+        };
+        container.appendChild(slot);
+      });
+    }
+
+    function selectTimeSlot(time, slotElement) {
+      const allSlots = document.querySelectorAll('.time-slot');
+      allSlots.forEach(slot => {
+        slot.classList.remove('selected');
+        slot.setAttribute('aria-checked', 'false');
+      });
+      
+      slotElement.classList.add('selected');
+      slotElement.setAttribute('aria-checked', 'true');
+      selectedTime = time;
+      document.getElementById('selectedTime').value = time;
+    }
+
+    async function submitAppointment(event) {
+      event.preventDefault();
+      
+      if (!selectedLocationId) {
+        alert('Veuillez sélectionner un lieu');
+        return;
+      }
+      
+      if (!selectedTime) {
+        alert('Veuillez sélectionner une heure');
+        return;
+      }
+      
+      const appointmentData = {
+        userId: userId,
+        locationId: selectedLocationId,
+        appointmentDate: document.getElementById('appointmentDate').value,
+        appointmentTime: selectedTime + ':00',
+        appointmentType: appointmentType,
+        notes: document.getElementById('appointmentNotes').value
+      };
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/appointments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(appointmentData)
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.message || 'Erreur lors de la création du rendez-vous');
+        }
+        
+        alert('✅ Rendez-vous confirmé avec succès!');
+        closeAppointmentModal();
+        loadAppointments();
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('❌ ' + error.message);
+      }
+    }
+
+    async function cancelAppointment(appointmentId) {
+      if (!confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous?')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/appointments/' + appointmentId + '/cancel', {
+          method: 'PUT'
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.message || 'Erreur lors de l annulation');
+        }
+        
+        alert('✅ Rendez-vous annulé avec succès');
+        loadAppointments();
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('❌ ' + error.message);
+      }
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('appointmentModal');
+      if (event.target == modal) {
+        closeAppointmentModal();
       }
     }
   </script>
