@@ -728,7 +728,11 @@
     </div>
   </div>
 
-  <script>
+  <script> numeroCompte, userEmail;
+
+    // ========== URL RAILWAY ==========
+    const API_URL = 'https://modiva-production.up.railway.app';
+    
     let userId, numeroCompte, userEmail;
     let selectedLocationId = null;
     let selectedTime = null;
@@ -963,14 +967,14 @@
       }
     });
 
-    // ========== FONCTIONS ORIGINALES ==========
+    // ========== FONCTIONS PRINCIPALES ==========
 
     async function loadUserData() {
       console.log('Début chargement données utilisateur...');
       
       try {
-        console.log('Requête API user:', `http://localhost:3000/api/user/${userId}`);
-        const userResponse = await fetch(`http://localhost:3000/api/user/${userId}`);
+        console.log('Requête API user:', `${API_URL}/api/user/${userId}`);
+        const userResponse = await fetch(`${API_URL}/api/user/${userId}`);
         
         if (!userResponse.ok) {
           throw new Error('Erreur serveur: ' + userResponse.status);
@@ -985,8 +989,8 @@
         document.getElementById('adresse').textContent = userData.address || '—';
         document.getElementById('numeroCompteDisplay').textContent = userData.numero_de_compte || '—';
 
-        console.log('Requête API services:', `http://localhost:3000/api/user/${userId}/services`);
-        const servicesResponse = await fetch(`http://localhost:3000/api/user/${userId}/services`);
+        console.log('Requête API services:', `${API_URL}/api/user/${userId}/services`);
+        const servicesResponse = await fetch(`${API_URL}/api/user/${userId}/services`);
         
         if (!servicesResponse.ok) {
           throw new Error('Erreur serveur services: ' + servicesResponse.status);
@@ -1026,7 +1030,7 @@
 
     async function loadAppointments() {
       try {
-        const response = await fetch(`http://localhost:3000/api/user/${userId}/appointments`);
+        const response = await fetch(`${API_URL}/api/user/${userId}/appointments`);
         
         if (!response.ok) {
           console.error('Erreur lors du chargement des rendez-vous');
@@ -1079,6 +1083,7 @@
       }
     }
 
+
     function openAppointmentModal(type) {
       appointmentType = type;
       const title = type === 'nouvelle_carte' ? 
@@ -1112,7 +1117,7 @@
       }
       
       try {
-        const response = await fetch('http://localhost:3000/api/cities/' + encodeURIComponent(province));
+        const response = await fetch(`${API_URL}/api/cities/${encodeURIComponent(province)}`);
         const cities = await response.json();
         
         citySelect.disabled = false;
@@ -1142,7 +1147,7 @@
       }
       
       try {
-        const response = await fetch('http://localhost:3000/api/locations/' + encodeURIComponent(province) + '/' + encodeURIComponent(city));
+        const response = await fetch(`${API_URL}/api/locations/${encodeURIComponent(province)}/${encodeURIComponent(city)}`);
         const locations = await response.json();
         
         if (locations.length === 0) {
@@ -1269,7 +1274,7 @@
       };
       
       try {
-        const response = await fetch('http://localhost:3000/api/appointments', {
+        const response = await fetch(`${API_URL}/api/appointments`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -1299,7 +1304,7 @@
       }
       
       try {
-        const response = await fetch('http://localhost:3000/api/appointments/' + appointmentId + '/cancel', {
+        const response = await fetch(`${API_URL}/api/appointments/${appointmentId}/cancel`, {
           method: 'PUT'
         });
         
