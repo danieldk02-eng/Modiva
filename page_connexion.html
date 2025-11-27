@@ -133,21 +133,6 @@
         .link-section a:hover {
             text-decoration: underline;
         }
-
-        .forgot-password {
-            text-align: right;
-            margin-top: 10px;
-        }
-
-        .forgot-password a {
-            color: #0b2336;
-            text-decoration: none;
-            font-size: 13px;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -162,8 +147,7 @@
         <h2>Connexion</h2>
 
         <div class="description">
-            
-            Modiva permet aux utilisateurs de créer un compte, de vérifier leur éligibilité pour obtenir des services spécifiques.
+            Modiva permet aux utilisateurs de créer un compte et de vérifier leur admissibilité.
         </div>
 
         <form id="loginForm">
@@ -177,10 +161,6 @@
                 <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
             </div>
 
-            <div class="forgot-password">
-                <a href="#">Mot de passe oublié?</a>
-            </div>
-
             <button type="submit">Se connecter</button>
         </form>
 
@@ -190,6 +170,7 @@
         </div>
     </div>
 
+    <!-- 🔥 NEW FIXED SCRIPT -->
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -197,37 +178,28 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Désactiver le bouton pendant la connexion
             const submitBtn = e.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Connexion en cours...';
 
             try {
-                // Appel API vers le backend
                 const response = await fetch('https://modiva-production.up.railway.app/api/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
 
                 const data = await response.json();
-                console.log('Réponse du serveur:', data); // Pour debug
+                console.log('Réponse du serveur:', data);
 
                 if (response.ok) {
-                    // Stocker les infos utilisateur en mémoire (session)
+                    // Save login session
                     sessionStorage.setItem('userId', data.userId);
                     sessionStorage.setItem('numeroCompte', data.numeroCompte);
                     sessionStorage.setItem('userEmail', email);
-                    
-                    console.log('Session storage set:', {
-                        userId: sessionStorage.getItem('userId'),
-                        numeroCompte: sessionStorage.getItem('numeroCompte')
-                    });
-                    
-                    // Redirection AVANT l'alerte
-                    window.location.replace('page_utilisateur.html');
+
+                    // Redirect to user dashboard
+                    window.location.href = 'page_utilisateur.html';
                 } else {
                     alert('❌ ' + (data.message || 'Erreur de connexion'));
                     submitBtn.disabled = false;
@@ -235,7 +207,7 @@
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('❌ Erreur de connexion au serveur');
+                alert('❌ Impossible de contacter le serveur');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Se connecter';
             }
