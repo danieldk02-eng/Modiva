@@ -231,7 +231,7 @@
       searchBtn.textContent = 'Vérification en cours...';
 
       try {
-        const response = await fetch(`http://localhost:3000/api/verify/${numeroCompte}`);
+        const response = await fetch(`https://modiva-production.up.railway.app/api/verify/${numeroCompte}`);
         const data = await response.json();
 
         if (response.ok) {

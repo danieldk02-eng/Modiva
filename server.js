@@ -1,155 +1,162 @@
-// server.js - Backend for Carte Canadienne du Handicap
+// Root launcher: start the real backend from /carte-handicap-backend
+console.log('🚀 Starting backend from ./carte-handicap-backend/server.js');
 
-import express from "express";
-import mysql from "mysql2";
-import bcrypt from "bcryptjs";
-import multer from "multer";
-import path from "path";
-import cors from "cors";
-import fs from "fs";
-import dotenv from "dotenv";
+import './carte-handicap-backend/server.js';
 
-dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 
-// ---------------- Middleware ----------------
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads"));
+// // server.js - Backend for Carte Canadienne du Handicap
 
-// ---------------- File Uploads ----------------
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = "uploads/";
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath);
-    }
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
+// import express from "express";
+// import mysql from "mysql2";
+// import bcrypt from "bcryptjs";
+// import multer from "multer";
+// import path from "path";
+// import cors from "cors";
+// import fs from "fs";
+// import dotenv from "dotenv";
 
-// ---------------- Database ----------------
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST || "mysql.railway.internal",
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT || 3306,
-});
+// dotenv.config();
+// railway 
+// const app = express();
+// const PORT = process.env.PORT || 3000;
 
-db.connect((err) => {
-  if (err) {
-    console.error("Erreur de connexion à la base de données:", err);
-    process.exit(1);
-  } else {
-    console.log("✅ Connecté à la base de données MySQL sur Railway");
-  }
-});
+// // ---------------- Middleware ----------------
+// app.use(cors());
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use("/uploads", express.static("uploads"));
 
-// ---------------- Routes ----------------
+// // ---------------- File Uploads ----------------
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const uploadPath = "uploads/";
+//     if (!fs.existsSync(uploadPath)) {
+//       fs.mkdirSync(uploadPath);
+//     }
+//     cb(null, uploadPath);
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
+// const upload = multer({ storage });
 
-// Root
-app.get("/", (req, res) => {
-  res.send("API Carte Canadienne du Handicap - Backend en ligne");
-});
+// // ---------------- Database ----------------
+// const db = mysql.createConnection({
+//   host: process.env.MYSQLHOST || "mysql.railway.internal",
+//   user: process.env.MYSQLUSER,
+//   password: process.env.MYSQLPASSWORD,
+//   database: process.env.MYSQLDATABASE,
+//   port: process.env.MYSQLPORT || 3306,
+// });
 
-// 1️⃣ Register a new user
-app.post("/register", async (req, res) => {
-  const { name, email, password, disability_category } = req.body;
+// db.connect((err) => {
+//   if (err) {
+//     console.error("Erreur de connexion à la base de données:", err);
+//     process.exit(1);
+//   } else {
+//     console.log("✅ Connecté à la base de données MySQL sur Railway");
+//   }
+// });
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "Champs requis manquants" });
-  }
+// // ---------------- Routes ----------------
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    db.query(
-      "INSERT INTO users (name, email, password, disability_category, approved) VALUES (?, ?, ?, ?, 0)",
-      [name, email, hashedPassword, disability_category],
-      (err) => {
-        if (err) {
-          console.error("Erreur lors de l'inscription:", err);
-          return res.status(500).json({ error: "Erreur serveur" });
-        }
-        res.status(201).json({ message: "Utilisateur enregistré avec succès" });
-      }
-    );
-  } catch (error) {
-    console.error("Erreur inattendue lors de l'inscription:", error);
-    res.status(500).json({ error: "Erreur interne du serveur" });
-  }
-});
+// // Root
+// app.get("/", (req, res) => {
+//   res.send("API Carte Canadienne du Handicap - Backend en ligne");
+// });
 
-// 2️⃣ Approve a user and automatically assign a free card
-app.post("/approve-user", (req, res) => {
-  const { userId } = req.body;
+// // 1️⃣ Register a new user
+// app.post("/register", async (req, res) => {
+//   const { name, email, password, disability_category } = req.body;
 
-  if (!userId) {
-    return res.status(400).json({ error: "User ID requis" });
-  }
+//   if (!name || !email || !password) {
+//     return res.status(400).json({ error: "Champs requis manquants" });
+//   }
 
-  // Find first unassigned card
-  const findCard = "SELECT uid FROM cards WHERE assigned = 0 LIMIT 1";
-  db.query(findCard, (err, cardResults) => {
-    if (err) {
-      console.error("Erreur lors de la recherche de carte:", err);
-      return res.status(500).json({ error: "Erreur serveur" });
-    }
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     db.query(
+//       "INSERT INTO users (name, email, password, disability_category, approved) VALUES (?, ?, ?, ?, 0)",
+//       [name, email, hashedPassword, disability_category],
+//       (err) => {
+//         if (err) {
+//           console.error("Erreur lors de l'inscription:", err);
+//           return res.status(500).json({ error: "Erreur serveur" });
+//         }
+//         res.status(201).json({ message: "Utilisateur enregistré avec succès" });
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Erreur inattendue lors de l'inscription:", error);
+//     res.status(500).json({ error: "Erreur interne du serveur" });
+//   }
+// });
 
-    if (cardResults.length === 0) {
-      return res.status(400).json({ error: "Aucune carte disponible" });
-    }
+// // 2️⃣ Approve a user and automatically assign a free card
+// app.post("/approve-user", (req, res) => {
+//   const { userId } = req.body;
 
-    const cardUID = cardResults[0].uid;
+//   if (!userId) {
+//     return res.status(400).json({ error: "User ID requis" });
+//   }
 
-    // Assign UID to user and mark approved
-    const assignUser = "UPDATE users SET uid = ?, approved = 1 WHERE id = ?";
-    db.query(assignUser, [cardUID, userId], (err) => {
-      if (err) {
-        console.error("Erreur lors de la mise à jour de l'utilisateur:", err);
-        return res.status(500).json({ error: "Erreur serveur" });
-      }
+//   // Find first unassigned card
+//   const findCard = "SELECT uid FROM cards WHERE assigned = 0 LIMIT 1";
+//   db.query(findCard, (err, cardResults) => {
+//     if (err) {
+//       console.error("Erreur lors de la recherche de carte:", err);
+//       return res.status(500).json({ error: "Erreur serveur" });
+//     }
 
-      // Mark card as assigned
-      const markCard = "UPDATE cards SET assigned = 1 WHERE uid = ?";
-      db.query(markCard, [cardUID], (err) => {
-        if (err) {
-          console.error("Erreur lors de la mise à jour de la carte:", err);
-          return res.status(500).json({ error: "Erreur serveur" });
-        }
+//     if (cardResults.length === 0) {
+//       return res.status(400).json({ error: "Aucune carte disponible" });
+//     }
 
-        res.json({
-          success: true,
-          message: "Utilisateur approuvé et carte assignée",
-          uid: cardUID,
-        });
-      });
-    });
-  });
-});
+//     const cardUID = cardResults[0].uid;
 
-// 3️⃣ Arduino RFID scan verification
-app.post("/scan", (req, res) => {
-  const { uid } = req.body;
+//     // Assign UID to user and mark approved
+//     const assignUser = "UPDATE users SET uid = ?, approved = 1 WHERE id = ?";
+//     db.query(assignUser, [cardUID, userId], (err) => {
+//       if (err) {
+//         console.error("Erreur lors de la mise à jour de l'utilisateur:", err);
+//         return res.status(500).json({ error: "Erreur serveur" });
+//       }
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Erreur serveur' });
-        }
+//       // Mark card as assigned
+//       const markCard = "UPDATE cards SET assigned = 1 WHERE uid = ?";
+//       db.query(markCard, [cardUID], (err) => {
+//         if (err) {
+//           console.error("Erreur lors de la mise à jour de la carte:", err);
+//           return res.status(500).json({ error: "Erreur serveur" });
+//         }
 
-        res.json(results);
-    });
-});
+//         res.json({
+//           success: true,
+//           message: "Utilisateur approuvé et carte assignée",
+//           uid: cardUID,
+//         });
+//       });
+//     });
+//   });
+// });
 
-// ---------------- Start Server ----------------
-app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
-});
+// // 3️⃣ Arduino RFID scan verification
+// app.post("/scan", (req, res) => {
+//   const { uid } = req.body;
+
+//     db.query(query, (err, results) => {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).json({ message: 'Erreur serveur' });
+//         }
+
+//         res.json(results);
+//     });
+// });
+
+// // ---------------- Start Server ----------------
+// app.listen(PORT, () => {
+//     console.log(`Serveur démarré sur le port ${PORT}`);
+// });

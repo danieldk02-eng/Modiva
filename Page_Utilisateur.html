@@ -213,8 +213,8 @@
       console.log('Début chargement données utilisateur...');
       
       try {
-        console.log('Requête API user:', `http://localhost:3000/api/user/${userId}`);
-        const userResponse = await fetch(`http://localhost:3000/api/user/${userId}`);
+        console.log('Requête API user:', `https://modiva-production.up.railway.app/api/user/${userId}`);
+        const userResponse = await fetch(`https://modiva-production.up.railway.app/api/user/${userId}`);
         
         if (!userResponse.ok) {
           throw new Error('Erreur serveur: ' + userResponse.status);
@@ -229,8 +229,8 @@
         document.getElementById('adresse').textContent = userData.address || '—';
         document.getElementById('numeroCompteDisplay').textContent = userData.numero_de_compte || '—';
 
-        console.log('Requête API services:', `http://localhost:3000/api/user/${userId}/services`);
-        const servicesResponse = await fetch(`http://localhost:3000/api/user/${userId}/services`);
+        console.log('Requête API services:', `https://modiva-production.up.railway.app/api/user/${userId}/services`);
+        const servicesResponse = await fetch(`https://modiva-production.up.railway.app/api/user/${userId}/services`);
         
         if (!servicesResponse.ok) {
           throw new Error('Erreur serveur services: ' + servicesResponse.status);
