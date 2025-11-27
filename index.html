@@ -6,161 +6,739 @@
   <title>Modiva – Carte Canadienne du Handicap</title>
 
   <style>
-    :root{
-      --blue:#00205b; --blue-900:#001944; --green:#28a745;
-      --text:#1f2d3d; --bg:#f6f8fb; --radius:12px;
-      --shadow:0 6px 20px rgba(0,0,0,.07);
+    :root {
+      --blue: #00205b;
+      --blue-light: #e6eef9;
+      --green: #28a745;
+      --grey: #6c757d;
+      --text: #1f2d3d;
+      --bg: #f8fafc;
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
     }
-    *{box-sizing:border-box}
-    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.55;}
 
-    /* ===== Header ===== */
-    header{background:#fff; border-bottom:1px solid #e5e9ee;}
-    .site-header{
-      max-width:1200px; margin:auto; padding:12px 20px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+      transition: all 0.3s ease;
     }
-    .header-left{display:flex; align-items:center; gap:10px; min-width:0;}
-    .header-left img{height:28px; flex:0 0 auto;}
-    .gc-text{font-weight:600; color:#111; white-space:nowrap;}
-    .header-right{display:flex; align-items:center; gap:10px; margin-left:auto;}
-    .header-btn{
-      text-decoration:none; color:#fff; background:var(--blue);
-      padding:9px 14px; border-radius:8px; font-weight:700; font-size:14px;
-      transition:transform .15s ease, opacity .15s ease;
+    
+    /* Mode Dyslexie */
+    body.dyslexia-mode {
+      font-family: 'Comic Sans MS', 'OpenDyslexic', Arial, sans-serif !important;
+      letter-spacing: 0.12em;
+      word-spacing: 0.16em;
+      line-height: 2;
     }
-    .header-btn.secondary{background:var(--green);}
-    .header-btn:hover{transform:translateY(-1px); opacity:.95;}
+    
+    /* Mode Contraste Élevé */
+    body.high-contrast {
+      background-color: #000 !important;
+      color: #fff !important;
+    }
+    body.high-contrast header,
+    body.high-contrast .intro,
+    body.high-contrast .card {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #fff !important;
+    }
+    body.high-contrast .hero::after {
+      background: rgba(0, 0, 0, 0.8) !important;
+    }
+    body.high-contrast h1,
+    body.high-contrast h3,
+    body.high-contrast strong {
+      color: #ffff00 !important;
+    }
+    body.high-contrast .btn {
+      border: 2px solid #fff !important;
+    }
+    body.high-contrast footer {
+      background-color: #1a1a1a !important;
+      border-top: 2px solid #fff;
+    }
+    
+    /* Panneau d'accessibilité */
+    .accessibility-panel {
+      position: fixed;
+      top: 80px;
+      right: -320px;
+      width: 300px;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 2000;
+      transition: right 0.3s ease;
+      border-radius: 10px 0 0 10px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .accessibility-panel.open {
+      right: 0;
+    }
+    
+    .accessibility-toggle {
+      position: fixed;
+      top: 80px;
+      right: 0;
+      background: var(--blue);
+      color: white;
+      padding: 15px 10px;
+      cursor: pointer;
+      z-index: 2001;
+      border-radius: 10px 0 0 10px;
+      font-size: 24px;
+      box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .accessibility-toggle:hover {
+      background: #003380;
+      transform: translateX(-5px);
+    }
+    
+    .accessibility-panel h3 {
+      color: var(--blue);
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 2px solid var(--blue);
+      padding-bottom: 10px;
+    }
+    
+    .accessibility-option {
+      margin: 15px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #f8f9fa;
+    }
+    
+    .accessibility-option label {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--blue);
+    }
+    
+    .accessibility-option input[type="checkbox"],
+    .accessibility-option input[type="range"] {
+      margin-right: 10px;
+    }
+    
+    .accessibility-option input[type="range"] {
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .text-size-display {
+      text-align: center;
+      font-weight: bold;
+      color: var(--blue);
+      margin-top: 5px;
+    }
+    
+    .tts-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .tts-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-size: 12px;
+    }
+    
+    .tts-btn.play {
+      background: #28a745;
+      color: white;
+    }
+    
+    .tts-btn.pause {
+      background: #ffc107;
+      color: #000;
+    }
+    
+    .tts-btn.stop {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .tts-btn:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+    
+    .tts-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    *:focus {
+      outline: 3px solid #ffc107 !important;
+      outline-offset: 2px !important;
+    }
+    
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--blue);
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 100;
+    }
+    .skip-to-content:focus {
+      top: 0;
+    }
 
-    /* ===== Hero ===== */
-    .hero{
-      background:url("home_banner.jpg") center/cover no-repeat, var(--blue-900);
-      min-height:280px; display:flex; align-items:center; justify-content:center;
-      position:relative; text-align:center; color:#fff;
+    /* Header bar like canada.ca */
+    header {
+      background-color: white;
+      border-bottom: 1px solid #dfe3e6;
     }
-    .hero::after{content:""; position:absolute; inset:0; background:rgba(0,32,91,.45);}
-    .hero-content{position:relative; z-index:1; padding:0 16px;}
-    .hero h1{margin:0 0 8px; font-size:40px; letter-spacing:.2px;}
-    .hero p{margin:0; font-size:18px; opacity:.95;}
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px 20px;
+    }
+    .header-top img {
+      height: 28px;
+    }
 
-    /* ===== Main ===== */
-    .container{max-width:1100px; margin:32px auto 48px; padding:0 20px;}
-    .intro{
-      background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:22px; text-align:center; margin-bottom:28px;
+    .header-buttons {
+      display: flex;
+      gap: 10px;
     }
-    .intro strong{color:var(--blue); font-size:18px;}
 
-    .btns{
-      display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:20px 0 36px;
+    .header-buttons a {
+      background: var(--blue);
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 15px;
+      transition: background 0.2s;
     }
-    .btn{
-      text-decoration:none; color:#fff; background:var(--blue);
-      padding:12px 22px; border-radius:10px; font-weight:700; font-size:16px;
-      box-shadow:var(--shadow); transition:transform .15s ease, opacity .15s ease;
+    .header-buttons a.signup {
+      background: var(--green);
     }
-    .btn.secondary{background:var(--green);}
-    .btn:hover{transform:translateY(-2px); opacity:.95;}
+    .header-buttons a:hover {
+      background: #00338d;
+    }
+    .header-buttons a.signup:hover {
+      background: #23923d;
+    }
 
-    .features{
-      display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
-      gap:18px;
+    /* Hero image area */
+    .hero {
+      background: url("home_banner.jpg") center/cover no-repeat;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      color: white;
     }
-    .card{
-      background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
-      overflow:hidden; text-align:center; transition:transform .2s, box-shadow .2s;
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 32, 91, 0.45);
     }
-    .card:hover{transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.12);}
-    .card img{width:100%; height:160px; object-fit:cover; background:#e6eef9;}
-    .card h3{color:var(--blue); font-size:18px; margin:14px 0 6px;}
-    .card p{color:#555; margin:0; padding:0 16px 16px; font-size:15px;}
-    .card a{display:inline-block; margin:0 0 16px; color:var(--blue); font-weight:600; text-decoration:none;}
-    .card a:hover{text-decoration:underline;}
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    .hero-content h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+    .hero-content p {
+      font-size: 20px;
+    }
 
-    footer{background:var(--blue); color:#fff; text-align:center; padding:20px; font-size:14px;}
-    footer a{color:#aad3ff; text-decoration:none;} footer a:hover{text-decoration:underline;}
-
-    /* ===== Mobile tweaks ===== */
-    @media (max-width:700px){
-      .site-header{padding:10px 14px;}
-      .gc-text{font-size:14px;}
-      .header-btn{padding:8px 12px; font-size:13px;}
-      .hero{min-height:220px;}
-      .hero h1{font-size:28px;}
-      .hero p{font-size:15px;}
-      .btn{width:100%; text-align:center;}
-      .card img{height:140px;}
+    /* Main container */
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
     }
-    @media (max-width:420px){
-      .gc-text{display:none;} /* keep logo visible, hide long text on very small screens */
-      .header-right{gap:8px;}
-      .header-btn{padding:8px 10px; border-radius:7px;}
+
+    .intro {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro strong {
+      color: var(--blue);
+      font-size: 20px;
+    }
+
+    /* Buttons */
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      padding: 14px 30px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      font-size: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+    }
+    .btn-secondary {
+      background: var(--green);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: var(--blue-light);
+    }
+    .card h3 {
+      color: var(--blue);
+      font-size: 20px;
+      margin: 15px 0 8px;
+    }
+    .card p {
+      color: #555;
+      padding: 0 20px 20px;
+      font-size: 16px;
+    }
+    .card a {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--blue);
+      color: white;
+      padding: 25px;
+      text-align: center;
+      font-size: 15px;
+    }
+    
+    footer a {
+      color: #aad3ff;
+      text-decoration: none;
+    }
+
+    @media (max-width: 700px) {
+      .hero-content h1 { font-size: 32px; }
+      .hero-content p { font-size: 16px; }
+      .header-buttons { flex-direction: column; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Header -->
-  <header>
-    <div class="site-header">
-      <div class="header-left">
-        <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-fr.svg" alt="Gouvernement du Canada">
-        <span class="gc-text">Gouvernement du Canada</span>
+  <!-- Lien d'accessibilité -->
+  <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
+  
+  <!-- Bouton d'accessibilité -->
+  <div class="accessibility-toggle" onclick="toggleAccessibilityPanel()" 
+       role="button" aria-label="Ouvrir le panneau d'accessibilité" tabindex="0">
+    ⚙️ Accessibilité
+  </div>
+  
+  <!-- Panneau d'accessibilité -->
+  <div class="accessibility-panel" id="accessibilityPanel" role="region" aria-label="Options d'accessibilité">
+    <h3>⚙️ Accessibilité</h3>
+    
+    <!-- Lecteur vocal -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="ttsEnabled" onchange="toggleTTS()">
+         Lecteur vocal
+      </label>
+      <div class="tts-controls" id="ttsControls" style="display: none;">
+        <button class="tts-btn play" onclick="startReading()" aria-label="Lire la page">▶</button>
+        <button class="tts-btn pause" onclick="pauseReading()" aria-label="Pause">⏸</button>
+        <button class="tts-btn stop" onclick="stopReading()" aria-label="Arrêter">⏹</button>
       </div>
-      <div class="header-right">
-        <a href="page_connexion.html" class="header-btn">Se connecter</a>
-        <a href="page_inscription.html" class="header-btn secondary">S’inscrire</a>
+      <div style="margin-top: 10px;">
+        <label for="speechRate" style="font-size: 13px;">Vitesse:</label>
+        <input type="range" id="speechRate" min="0.5" max="2" step="0.1" value="1" 
+               oninput="updateSpeechRate(this.value)" aria-label="Vitesse de lecture">
+        <div class="text-size-display" id="rateDisplay">1.0x</div>
+      </div>
+    </div>
+    
+    <!-- Taille du texte -->
+    <div class="accessibility-option">
+      <label for="textSize"> Taille du texte</label>
+      <input type="range" id="textSize" min="12" max="24" value="16" 
+             oninput="changeTextSize(this.value)" aria-label="Ajuster la taille du texte">
+      <div class="text-size-display" id="textSizeDisplay">16px</div>
+    </div>
+    
+    <!-- Mode contraste élevé -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="highContrast" onchange="toggleHighContrast()">
+         Contraste élevé
+      </label>
+    </div>
+    
+    <!-- Mode dyslexie -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="dyslexiaMode" onchange="toggleDyslexiaMode()">
+         Mode lecture adapté
+      </label>
+    </div>
+    
+    <!-- Espacement du texte -->
+    <div class="accessibility-option">
+      <label>
+        <input type="checkbox" id="textSpacing" onchange="toggleTextSpacing()">
+         Espacement augmenté
+      </label>
+    </div>
+    
+    <!-- Réinitialiser -->
+    <div class="accessibility-option">
+      <button onclick="resetAccessibility()" style="width: 100%; background: var(--grey); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
+         Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <header role="banner">
+    <div class="header-top">
+      <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-blk-fr.svg" alt="Gouvernement du Canada">
+      <div class="header-buttons">
+        <a href="page_connexion.html" aria-label="Se connecter">Se connecter</a>
+        <a href="page_inscription.html" class="signup" aria-label="S'inscrire">S'inscrire</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
+  <section class="hero" role="img" aria-label="Bannière d'accueil">
     <div class="hero-content">
       <h1>Modiva</h1>
       <p>Système canadien de gestion des accommodements</p>
     </div>
   </section>
 
-  <!-- Main -->
-  <main class="container">
+  <main class="container" id="main-content" role="main">
     <div class="intro">
       <strong>Bienvenue sur Modiva</strong><br><br>
-      Ce portail permet aux citoyens canadiens en situation de handicap de gérer leurs services et d’accéder à leurs accommodements de façon simple, sécurisée et centralisée.
+      Ce portail permet aux citoyens canadiens en situation de handicap de gérer leurs services et d'accéder à leurs accommodements de façon simple, sécurisée et centralisée.
     </div>
 
     <div class="btns">
-      <a href="page_connexion.html" class="btn">Se connecter</a>
-      <a href="page_inscription.html" class="btn secondary">S’inscrire</a>
+      <a href="page_connexion.html" class="btn btn-primary" aria-label="Se connecter à votre compte">Se connecter</a>
+      <a href="page_inscription.html" class="btn btn-secondary" aria-label="Créer un nouveau compte">S'inscrire</a>
     </div>
 
     <div class="features">
-      <div class="card">
-        <img src="utilisateur.jpg" alt="Espace utilisateur">
+      <article class="card">
+        <img src="utilisateur.jpg" alt="Utilisateur" />
         <h3>Pour les utilisateurs</h3>
         <p>Gérez vos informations, vos demandes et vos documents liés à votre carte canadienne du handicap.</p>
-        <a href="page_connexion.html">Accéder à mon compte →</a>
-      </div>
+        <a href="page_connexion.html" aria-label="Accéder à mon compte utilisateur">Accéder à mon compte →</a>
+      </article>
 
-      <div class="card">
-        <img src="employers.jpg" alt="Vérification employé">
+      <article class="card">
+        <img src="employers.jpg" alt="Employés" />
         <h3>Pour les employés</h3>
-        <p>Vérifiez rapidement l’admissibilité d’un usager à l’aide de sa carte NFC.</p>
-        <a href="page_verification_accommodements.html">Vérifier une carte →</a>
-      </div>
+        <p>Vérifiez rapidement l'admissibilité d'un usager à l'aide de sa carte NFC.</p>
+        <a href="page_verification_accommodements.html" aria-label="Vérifier une carte d'accommodement">Vérifier une carte →</a>
+      </article>
 
-      <div class="card">
-        <img src="admin.jpg" alt="Espace administrateur">
-        <h3>Pour l’administration</h3>
-        <p>Gérez les validations, les demandes et les rapports à travers l’interface sécurisée.</p>
-        <a href="page_admin_validation.html">Espace administrateur →</a>
-      </div>
+      <article class="card">
+        <img src="admin.jpg" alt="Administration" />
+        <h3>Pour l'administration</h3>
+        <p>Gérez les validations, les demandes et les rapports à travers l'interface sécurisée.</p>
+        <a href="page_admin_validation.html" aria-label="Accéder à l'espace administrateur">Espace administrateur →</a>
+      </article>
     </div>
   </main>
 
-  <footer>
+  <footer role="contentinfo">
     © Gouvernement du Canada – Projet Modiva<br>
     <small>Inspiré du design officiel de <a href="https://www.canada.ca/fr.html">Canada.ca</a></small>
   </footer>
+
+  <script>
+    // Variables globales
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+    let isReading = false;
+    let speechRate = 1.0;
+
+    // Charger les paramètres au chargement de la page
+    window.addEventListener('load', function() {
+      loadAccessibilitySettings();
+    });
+
+    // ========== FONCTIONS D'ACCESSIBILITÉ ==========
+    
+    function toggleAccessibilityPanel() {
+      const panel = document.getElementById('accessibilityPanel');
+      panel.classList.toggle('open');
+    }
+    
+    function toggleTTS() {
+      const enabled = document.getElementById('ttsEnabled').checked;
+      const controls = document.getElementById('ttsControls');
+      controls.style.display = enabled ? 'flex' : 'none';
+      
+      if (!enabled) {
+        stopReading();
+      }
+      
+      saveAccessibilitySettings();
+    }
+    
+    function startReading() {
+      if (!document.getElementById('ttsEnabled').checked) {
+        alert('Veuillez activer le lecteur vocal d\'abord');
+        return;
+      }
+      
+      stopReading();
+      
+      const main = document.querySelector('main');
+      if (!main) return;
+      
+      const textElements = main.querySelectorAll('h1, h3, p, a, strong');
+      let textToRead = Array.from(textElements)
+        .map(el => el.textContent.trim())
+        .filter(text => text.length > 0 && !text.includes('→'))
+        .join('. ');
+      
+      currentUtterance = new SpeechSynthesisUtterance(textToRead);
+      currentUtterance.lang = 'fr-FR';
+      currentUtterance.rate = speechRate;
+      
+      currentUtterance.onstart = () => {
+        isReading = true;
+      };
+      
+      currentUtterance.onend = () => {
+        isReading = false;
+      };
+      
+      speechSynthesis.speak(currentUtterance);
+    }
+    
+    function pauseReading() {
+      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+      } else if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+      }
+    }
+    
+    function stopReading() {
+      speechSynthesis.cancel();
+      isReading = false;
+    }
+    
+    function updateSpeechRate(value) {
+      speechRate = parseFloat(value);
+      document.getElementById('rateDisplay').textContent = value + 'x';
+      
+      if (currentUtterance && isReading) {
+        stopReading();
+        startReading();
+      }
+    }
+    
+    function changeTextSize(size) {
+      document.body.style.fontSize = size + 'px';
+      document.getElementById('textSizeDisplay').textContent = size + 'px';
+      saveAccessibilitySettings();
+    }
+    
+    function toggleHighContrast() {
+      document.body.classList.toggle('high-contrast');
+      saveAccessibilitySettings();
+    }
+    
+    function toggleDyslexiaMode() {
+      document.body.classList.toggle('dyslexia-mode');
+      saveAccessibilitySettings();
+    }
+    
+    function toggleTextSpacing() {
+      const enabled = document.getElementById('textSpacing').checked;
+      if (enabled) {
+        document.body.style.letterSpacing = '0.12em';
+        document.body.style.wordSpacing = '0.16em';
+        document.body.style.lineHeight = '1.8';
+      } else {
+        document.body.style.letterSpacing = '';
+        document.body.style.wordSpacing = '';
+        document.body.style.lineHeight = '';
+      }
+      saveAccessibilitySettings();
+    }
+    
+    function resetAccessibility() {
+      document.getElementById('ttsEnabled').checked = false;
+      document.getElementById('textSize').value = 16;
+      document.getElementById('highContrast').checked = false;
+      document.getElementById('dyslexiaMode').checked = false;
+      document.getElementById('textSpacing').checked = false;
+      
+      document.body.classList.remove('high-contrast', 'dyslexia-mode');
+      document.body.style.fontSize = '';
+      document.body.style.letterSpacing = '';
+      document.body.style.wordSpacing = '';
+      document.body.style.lineHeight = '';
+      
+      document.getElementById('ttsControls').style.display = 'none';
+      document.getElementById('textSizeDisplay').textContent = '16px';
+      
+      stopReading();
+      localStorage.removeItem('accessibilitySettings');
+    }
+    
+    function saveAccessibilitySettings() {
+      const settings = {
+        ttsEnabled: document.getElementById('ttsEnabled').checked,
+        textSize: document.getElementById('textSize').value,
+        highContrast: document.getElementById('highContrast').checked,
+        dyslexiaMode: document.getElementById('dyslexiaMode').checked,
+        textSpacing: document.getElementById('textSpacing').checked,
+        speechRate: speechRate
+      };
+      localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+    }
+    
+    function loadAccessibilitySettings() {
+      const saved = localStorage.getItem('accessibilitySettings');
+      if (!saved) return;
+      
+      try {
+        const settings = JSON.parse(saved);
+        
+        if (settings.ttsEnabled) {
+          document.getElementById('ttsEnabled').checked = true;
+          toggleTTS();
+        }
+        
+        if (settings.textSize) {
+          document.getElementById('textSize').value = settings.textSize;
+          changeTextSize(settings.textSize);
+        }
+        
+        if (settings.highContrast) {
+          document.getElementById('highContrast').checked = true;
+          toggleHighContrast();
+        }
+        
+        if (settings.dyslexiaMode) {
+          document.getElementById('dyslexiaMode').checked = true;
+          toggleDyslexiaMode();
+        }
+        
+        if (settings.textSpacing) {
+          document.getElementById('textSpacing').checked = true;
+          toggleTextSpacing();
+        }
+        
+        if (settings.speechRate) {
+          speechRate = settings.speechRate;
+          document.getElementById('speechRate').value = speechRate;
+          document.getElementById('rateDisplay').textContent = speechRate + 'x';
+        }
+      } catch (e) {
+        console.error('Erreur chargement paramètres accessibilité:', e);
+      }
+    }
+    
+    // Support clavier
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const panel = document.getElementById('accessibilityPanel');
+        if (panel.classList.contains('open')) {
+          panel.classList.remove('open');
+        }
+      }
+      
+      // Alt + A pour ouvrir le panneau d'accessibilité
+      if (e.altKey && e.key === 'a') {
+        e.preventDefault();
+        toggleAccessibilityPanel();
+      }
+    });
+    
+    // Permettre d'ouvrir le panneau avec Enter sur le bouton
+    document.querySelector('.accessibility-toggle').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleAccessibilityPanel();
+      }
+    });
+  </script>
 </body>
 </html>
